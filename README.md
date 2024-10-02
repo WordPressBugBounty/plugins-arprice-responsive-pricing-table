@@ -1,0 +1,1 @@
+# plugins-arprice-responsive-pricing-table
