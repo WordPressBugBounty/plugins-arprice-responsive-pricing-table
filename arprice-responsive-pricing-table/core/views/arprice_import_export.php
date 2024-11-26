@@ -1,5 +1,6 @@
 <?php
-if ( ! defined( 'ABSPATH' ) || ! function_exists( 'current_user_can' ) || ! current_user_can( 'arplite_import_export_pricingtables' ) || ! isset( $_GET['arplite_import_export_nonce'] ) || isset( $_GET['arplite_import_export_nonce'] ) && ! wp_verify_nonce( sanitize_text_field( $_GET['arplite_import_export_nonce'] ), 'arplite_import_export_nonce' ) ) {
+if ( ! defined( 'ABSPATH' ) || ! function_exists( 'current_user_can' ) || ! current_user_can( 'arplite_import_export_pricingtables' ) || ! isset( $_GET['arprice_import_export_nonce'] ) || isset( $_GET['arprice_import_export_nonce'] ) && ! wp_verify_nonce( sanitize_text_field( $_GET['arprice_import_export_nonce'] ), 'arprice_import_export_nonce' ) ) {
+
 	exit;
 }
 ?>
@@ -7,59 +8,78 @@ if ( ! defined( 'ABSPATH' ) || ! function_exists( 'current_user_can' ) || ! curr
 	<div class="arp_loader_img"></div>
 </div>
 <?php
-global $arpricelite_version, $arplite_pricingtable;
-global $wpdb, $arpricelite_import_export;
+global $arpricelite_version, $arplite_pricingtable, $arpricemain,$wpdb, $arpricelite_import_export;
+ 
 
 if ( isset( $_FILES['arp_pt_import_file'] ) ) {
-	global $wpdb;
-	// phpcs:ignore
-	$file = $_FILES['arp_pt_import_file'];
+	global $wpdb, $arpricemain;
+	
+	//$file = $_FILES['arp_pt_import_file']; //phpcs:ignore
 
-	$arplite_fileobj = new ARPLiteFilecontroller( $file, false );
+	if( !$arpricemain->arprice_is_pro_active() ){
+		
+		$file = $_FILES['arp_pt_import_file']; //phpcs:ignore
 
-	if ( false == $arplite_fileobj ) {
-		echo 'Error: ' . esc_html( $arplite_fileobj->error_msg ) . '<br/>';
-	} else {
-		$wp_upload_dir = wp_upload_dir();
-		$upload_dir    = $wp_upload_dir['basedir'] . '/arprice-responsive-pricing-table/import/';
-
-		$output_dir = $upload_dir;
-		$output_url = $wp_upload_dir['baseurl'] . '/arprice-responsive-pricing-table/import/';
-
-		if ( ! is_dir( $output_dir ) ) {
-			wp_mkdir_p( $output_dir );
-		}
-
-		$arplite_fileobj->check_caps   = true;
-		$arplite_fileobj->capabilities = array( 'arplite_import_export_pricingtables' );
-
-		$arplite_fileobj->check_nonce  = true;
-		$arplite_fileobj->nonce_data   = isset( $_POST['_wpnonce_arplite'] ) ? sanitize_text_field( $_POST['_wpnonce_arplite'] ) : '';
-		$arplite_fileobj->nonce_action = 'arplite_wp_nonce';
-
-		$arplite_fileobj->check_only_image = false;
-
-		$arplite_fileobj->check_specific_ext = true;
-		$arplite_fileobj->allowed_ext        = array( 'txt' );
-
-		$destination = $output_dir . $file['name'];
-
-		$arplite_fileobj->arplite_process_upload( $destination );
-
+		$arplite_fileobj = new ARPLiteFilecontroller( $file, false );
+	
 		if ( false == $arplite_fileobj ) {
-			echo "<input type='hidden' id='arp_import_file_error' value='" . esc_html( $arplite_fileobj->error_msg ) . "' />";
+			echo 'Error: ' . esc_html( $arplite_fileobj->error_msg ) . '<br/>';
 		} else {
-			$explodezipfilename = explode( '.', $file['name'] );
-			$zipfilename        = $explodezipfilename[0];
-			echo "<input type='hidden' id='arp_perform_import_file_check' value='" . esc_html( $zipfilename ) . "' />";
+
+			$wp_upload_dir = wp_upload_dir();
+			$upload_dir    = $wp_upload_dir['basedir'] . '/arprice-responsive-pricing-table/import/';
+
+			$output_dir = $upload_dir;
+			$output_url = $wp_upload_dir['baseurl'] . '/arprice-responsive-pricing-table/import/';
+
+			if ( ! is_dir( $output_dir ) ) {
+				wp_mkdir_p( $output_dir );
+			}
+			
+			$arplite_fileobj->check_caps   = true;
+			$arplite_fileobj->capabilities = array( 'arplite_import_export_pricingtables' );
+
+			$arplite_fileobj->check_nonce  = true;
+			$arplite_fileobj->nonce_data   = isset( $_POST['_wpnonce_arplite'] ) ? sanitize_text_field( $_POST['_wpnonce_arplite'] ) : '';
+			$arplite_fileobj->nonce_action = 'arplite_wp_nonce';
+
+			$arplite_fileobj->check_only_image = false;
+
+			$arplite_fileobj->check_specific_ext = true;
+			$arplite_fileobj->allowed_ext        = array( 'txt' );
+
+			$destination = $output_dir . $file['name'];
+
+			$arplite_fileobj->arplite_process_upload( $destination );	
+
+			if ( false == $arplite_fileobj ) {
+				echo "<input type='hidden' id='arp_import_file_error' value='" . esc_html( $arplite_fileobj->error_msg ) . "' />";
+			} else {
+				$explodezipfilename = explode( '.', $file['name'] );
+				$zipfilename        = $explodezipfilename[0];
+				echo "<input type='hidden' id='arp_perform_import_file_check' value='" . esc_html( $zipfilename ) . "' />";
+			}
 		}
+
+	} else {
+
+		global $arpricelite_import_export;
+		$arpricelite_import_export->arprice_render_pro_settings('arprice_import_table_upload');
 	}
+	
+
 }
 ?>
 
 <div class="arp_import_export_main" style="background-color: #fff;">
 
 	<div class="arp_import_export_main_title"><?php esc_html_e( 'Import / Export Pricing Tables', 'arprice-responsive-pricing-table' ); ?></div>
+
+	<?php 
+
+		global $arprice_global_settings;
+		$arprice_global_settings->arprice_render_pro_settings( 'arprice_pro_render_license_notice' ); 
+	?>
 	<div class="clear" style="clear:both;"></div>
 	<div class="success_message" id="import_success_message" style="">
 		<?php esc_html_e( 'Table Imported Successfully', 'arprice-responsive-pricing-table' ); ?>
@@ -85,6 +105,12 @@ if ( isset( $_FILES['arp_pt_import_file'] ) ) {
 	<div class="error_message arp_message_padding" id="export_blank_error_message" style="display:none;">
 		<?php esc_html_e( 'Please Select Table.', 'arprice-responsive-pricing-table' ); ?>
 	</div>
+	<?php 
+	if($arpricemain->arprice_is_pro_active()){
+		global $arpricelite_import_export;
+		$arpricelite_import_export->arprice_render_pro_settings('arprice_import_export_error');
+	}
+	?>
 	<div class="clear" style="clear:both;"></div>
 	<div class="arp_import_export_main_inner">
 
@@ -93,6 +119,7 @@ if ( isset( $_FILES['arp_pt_import_file'] ) ) {
 			<div class="arp_import_export_sub_title"><?php esc_html_e( 'Export Pricing Tables', 'arprice-responsive-pricing-table' ); ?></div>
 
 			<div class="import_export_list_main">
+				<?php if( !$arpricemain->arprice_is_pro_active() ){ ?> 
 				<form  name="arplite_export" method="post" action="" id="arplite_export" onsubmit="return import_export_table();">
 					<div class="arp_import_export_frm_title"><?php esc_html_e( 'Please Select Table(s)', 'arprice-responsive-pricing-table' ); ?></div>
 					<div class="arp_import_export_frm_select" id="export_table_lists">
@@ -127,55 +154,69 @@ if ( isset( $_FILES['arp_pt_import_file'] ) ) {
 						<button class="arp_import_export_btn" type="submit" name="arplite_export_tables"><img class="arp_import_export_btn_img"><span class="arp_import_export_btn_txt"><?php esc_html_e( 'Export', 'arprice-responsive-pricing-table' ); ?></span></button> 
 					</div>
 				</form>
-
+				<?php } else {
+					global $arpricelite_import_export;
+					$arpricelite_import_export->arprice_render_pro_settings('arprice_import_form_listing');
+				} ?>
 			</div>
 		</div> 
 
+		<?php 
 
-		<div class="arp_import_section">
-			<div class="arp_import_export_sub_title"><?php esc_html_e( 'Import Pricing Tables', 'arprice-responsive-pricing-table' ); ?></div>
+			global $arpricemain;
+			if( !$arpricemain->arprice_is_pro_active() ){ ?>
 
-			<div class="import_export_list_main">
-				<form name="arp_import" id="arp_import" method="post" enctype="multipart/form-data" onsubmit="return check_valid_imported_file();" >
-					<?php $arplite_nonce = wp_create_nonce( 'arplite_wp_nonce' ); ?>
-					<input type="hidden" name="_wpnonce_arplite" value="<?php echo esc_html( $arplite_nonce ); ?>">
-					<table align="left" cellpadding="0" cellspacing="0" width="100%">
-						<tr>
-							<td colspan="3"><div class="arp_import_export_frm_title"><?php esc_html_e( 'Please Upload text file exported from ARPrice Lite plugin', 'arprice-responsive-pricing-table' ); ?></div></td>
-						</tr>
-						<tr>
-							<td><div class="arp_import_export_select_title"><?php esc_html_e( 'Select File :', 'arprice-responsive-pricing-table' ); ?></div></td>                                
-						</tr>
+			<div class="arp_import_section">
+				<div class="arp_import_export_sub_title"><?php esc_html_e( 'Import Pricing Tables', 'arprice-responsive-pricing-table' ); ?></div>
 
-						<tr>
-							<td>
-								<input type="file" style="opacity:0;width:0px !important;;height:0px !important;;padding:0px !important;" id="arp_pt_import_file" name="arp_pt_import_file"  />
-								<label for="arp_pt_import_file" class="arp_import_file_main">
-									<div  class="text pd_input_control pd_input_small helpdesk_txt">
-										<div class="arp_import_export_file_btn"><?php esc_html_e( 'Add File', 'arprice-responsive-pricing-table' ); ?></div>
-										<div id="arp_pt_import_file_name" class= "arp_import_file_name">
-											<?php esc_html_e( 'No file Selected', 'arprice-responsive-pricing-table' ); ?>
+				<div class="import_export_list_main">
+					<form name="arp_import" id="arp_import" method="post" enctype="multipart/form-data" onsubmit="return check_valid_imported_file();" >
+						<?php $arplite_nonce = wp_create_nonce( 'arplite_wp_nonce' ); ?>
+						<input type="hidden" name="_wpnonce_arplite" value="<?php echo esc_html( $arplite_nonce ); ?>">
+						<table align="left" cellpadding="0" cellspacing="0" width="100%">
+							<tr>
+								<td colspan="3"><div class="arp_import_export_frm_title"><?php esc_html_e( 'Please Upload text file exported from ARPrice Lite plugin', 'arprice-responsive-pricing-table' ); ?></div></td>
+							</tr>
+							<tr>
+								<td><div class="arp_import_export_select_title"><?php esc_html_e( 'Select File :', 'arprice-responsive-pricing-table' ); ?></div></td>                                
+							</tr>
+
+							<tr>
+								<td>
+									<input type="file" style="opacity:0;width:0px !important;;height:0px !important;;padding:0px !important;" id="arp_pt_import_file" name="arp_pt_import_file"  />
+									<label for="arp_pt_import_file" class="arp_import_file_main">
+										<div  class="text pd_input_control pd_input_small helpdesk_txt">
+											<div class="arp_import_export_file_btn"><?php esc_html_e( 'Add File', 'arprice-responsive-pricing-table' ); ?></div>
+											<div id="arp_pt_import_file_name" class= "arp_import_file_name">
+												<?php esc_html_e( 'No file Selected', 'arprice-responsive-pricing-table' ); ?>
+											</div>
 										</div>
+									</label>    
+								</td>
+							</tr>
+
+							<tr>
+								<td>
+									<div class="arp_import_export_frm_submit">
+										<button class="arp_import_export_btn" type="submit" name="imprort_file" id="import_file" style="margin-top: 20px;"><img class="arp_import_export_btn_img"><span class="arp_import_export_btn_txt"><?php esc_html_e( 'Import', 'arprice-responsive-pricing-table' ); ?></span></button>
 									</div>
-								</label>    
-							</td>
-						</tr>
-
-						<tr>
-							<td>
-								<div class="arp_import_export_frm_submit">
-									<button class="arp_import_export_btn" type="submit" name="imprort_file" id="import_file" style="margin-top: 20px;"><img class="arp_import_export_btn_img"><span class="arp_import_export_btn_txt"><?php esc_html_e( 'Import', 'arprice-responsive-pricing-table' ); ?></span></button>
-								</div>
-							</td>
-						</tr>
-					</table>
-				</form>
+								</td>
+							</tr>
+						</table>
+					</form>
+				</div>
 			</div>
-		</div>
 
+		 	<?php } else {
+				global $arpricelite_import_export;
+				$arpricelite_import_export->arprice_render_pro_settings('arprice_import_export_pro');
+			} ?>
 	</div>
 </div>    
 
+<?php 
+global $arpricemain;
+if( !$arpricemain->arprice_is_pro_active() ){ ?>
 
 <div class="arp_upgrade_modal" id="arplite_custom_css_notice" style="display:none;">
 	<div class="upgrade_modal_top_belt">
@@ -191,3 +232,7 @@ if ( isset( $_FILES['arp_pt_import_file'] ) ) {
 		<input type="hidden" name="arp_request_version" id="arp_request_version" value="<?php echo esc_html( get_bloginfo( 'version' ) ); ?>" />
 	</div>
 </div>
+
+<?php }
+
+do_action('arprice_quick_help_links');

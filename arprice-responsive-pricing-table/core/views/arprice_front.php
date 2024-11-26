@@ -1,16 +1,22 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 if ( ! function_exists( 'arplite_get_pricing_table_string' ) ) {
 
 	function arplite_get_pricing_table_string( $table_id, $pricetable_name = '', $is_tbl_preview = 0 ) {
+
+		global $arpricemain;
+
 		$font_awesome_match = array();
 		$arp_inc_effect_css = array();
 
 		wp_enqueue_script( 'arplite_front_js' );
 		wp_enqueue_style( 'arplite_front_css' );
-		$is_enable_font_awesome = get_option( 'enable_font_loading_icon' );
 
-		if ( is_array( $is_enable_font_awesome ) && in_array( 'enable_fontawesome_icon', $is_enable_font_awesome ) ) {
+		$is_enable_font_awesome = $arpricemain->arprice_get_settings('enable_font_loading_icon','general_settings');
+		 
+		if ( $is_enable_font_awesome == '1') {
 			wp_enqueue_style( 'arplite_fontawesome_css' );
 		}
 
@@ -137,7 +143,11 @@ if ( ! function_exists( 'arplite_get_pricing_table_string' ) ) {
 		}
 
 		$tablestring = '';
-
+			
+		$tablestring .= $arpricelite_form -> arplite_load_js_css($table_id, $is_template,$is_gutenberg = true);
+			
+		$tablestring .= $arplite_pricingtable->arplite_front_inline_css_callback( $table_id, 0, false,false,true);
+			
 		$title_cls = '';
 
 		$animation_margin = '';
@@ -175,8 +185,10 @@ if ( ! function_exists( 'arplite_get_pricing_table_string' ) ) {
 			$template_name = $table_id;
 		}
 
-				$arp_default_character_arr = get_option( 'arplite_css_character_set' );
-		$arp_subset                        = ( isset( $arp_default_character_arr ) && ! empty( $arp_default_character_arr ) ) ? '&subset=' . implode( ',', $arp_default_character_arr ) : '';
+		global $arpricemain; 
+		$arp_default_character_arr = !empty( $arpricemain->arprice_get_settings('arp_css_character_set', 'general_settings')) ? $arpricemain->arprice_get_settings('arp_css_character_set','general_settings') : get_option( 'arp_css_character_set' );
+		
+		$arp_subset                        = ( isset( $arp_default_character_arr ) && ! empty( $arp_default_character_arr ) && is_array( $arp_default_character_arr) ) ? '&subset=' . implode( ',', $arp_default_character_arr ) : '';
 
 		if ( is_ssl() ) {
 			$googlefontbaseurl = 'https://fonts.googleapis.com/css?family=';
@@ -253,6 +265,16 @@ if ( ! function_exists( 'arplite_get_pricing_table_string' ) ) {
 		if ( isset( $including_google_fonts ) && is_array( $including_google_fonts ) && ! empty( $including_google_fonts ) ) {
 			foreach ( $including_google_fonts as $google_fonts ) {
 					wp_enqueue_style( 'arplite_google_font_css-' . str_replace( ' ', '+', $google_fonts ), $googlefontbaseurl . urlencode( trim( $google_fonts ) ) . $arp_subset, array(), $arpricelite_version );
+					if(isset( $_REQUEST['context'] ) && 'edit' == $_REQUEST['context'] ){
+					if ( is_ssl() ) {
+						$is_guternberg_googlefontbaseurl = 'https://fonts.googleapis.com/css?family=' . $google_fonts . '&ver=' .$arpricelite_version ;
+					} else {
+						$is_guternberg_googlefontbaseurl = 'http://fonts.googleapis.com/css?family=' . $google_fonts . '&ver=' .$arpricelite_version;
+					}
+					if($is_gutenberg){
+						$tablestring .="<link rel='stylesheet' id='arplite_google_font_css-{$google_fonts}' href='{$is_guternberg_googlefontbaseurl}'>";
+					}
+				}
 			}
 		}
 
@@ -1442,6 +1464,10 @@ if ( ! function_exists( 'arplite_get_pricing_table_string' ) ) {
 		$tablestring  = preg_replace( "~\n~", '', $tablestring );
 
 		$tablestring = $arplite_pricingtable->arprice_font_icon_size_parser( $tablestring );
+
+		if($is_gutenberg){
+			return $tablestring;
+		}
 
 		$tablestring = $arplite_pricingtable->arp_remove_style_tag( $tablestring );
 

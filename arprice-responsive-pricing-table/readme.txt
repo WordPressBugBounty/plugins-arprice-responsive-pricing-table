@@ -3,9 +3,9 @@ Contributors: reputeinfosystems, dimplemodi
 Tags:  pricing table, price table, Pricing, pricing tables, team showcase, comparison table, price table plugin, plans, team views, profile views,  responsive pricing table, member showcase, team members
 Donate link: https://www.arpriceplugin.com/premium/upgrade_to_premium.php?rdt=t3
 Requires at least: 4.5
-Tested up to: 6.4.1
+Tested up to: 6.7.1
 Requires PHP: 5.6
-Stable tag: 3.6.4
+Stable tag: 3.6.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -124,6 +124,12 @@ Please follow the steps for your ARPrice installation below:
 12. ARPrice - Premium Pricing Table Sample 5
 
 == Changelog ==
+
+= 3.6.5 =
+* Re-designed Gutenberg Block with real time preview of selected pricing table.
+* Added Dedicated Beaver Builder Block
+* Added Dedicated Fusion Builder Block
+* Other minor bug fixes
 
 = 3.6.4 =
 * Minor bug fixes

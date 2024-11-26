@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 class arpriceliteelementcontroller {
 
 	function __construct() {

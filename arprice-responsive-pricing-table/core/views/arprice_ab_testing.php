@@ -1,4 +1,7 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 	global $wpdb,$arp_pricingtable,$arprice_ab_testing,$arpricelite_version;
 if ( is_ssl() ) {
 	$google_font_url = 'https://fonts.googleapis.com/css?family=Ubuntu:400,500,700';
@@ -24,6 +27,8 @@ if ( ! empty( $get_table_data ) ) {
 ?>
 <input type="hidden" id="arp_ab_analytic_title" value="<?php echo esc_html_e( 'A/B Testing Analytics', 'arprice-responsive-pricing-table' ) . ' ( ' . esc_html__( 'From', 'arprice-responsive-pricing-table' ) . ' ' . esc_html( $table_last_updated ) . ' ' . esc_html__( 'till now', 'arprice-responsive-pricing-table' ) . ' )'; ?>" />
 <input type="hidden" id="yAxis_title" value="<?php esc_html_e( 'Clicks & Views in %', 'arprice-responsive-pricing-table' ); ?>" />
+<?php $arplite_nonce = wp_create_nonce( 'arplite_wp_nonce' ); ?>
+	<input type="hidden" name="_wpnonce_arplite" value="<?php echo esc_html( $arplite_nonce ); ?>">
 <style type="text/css">
 	#wpcontent, #wpfooter,#wpwrap{
 		background: #fff;
@@ -264,3 +269,5 @@ if ( ! empty( $get_table_data ) ) {
 
 	</div>
 </div>
+
+<?php do_action('arprice_quick_help_links'); ?>

@@ -1,19 +1,25 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) || ! function_exists( 'current_user_can' ) || ! current_user_can( 'arplite_view_pricingtables' ) || ! isset( $_GET['arplite_page_nonce'] ) || ( isset( $_GET['arplite_page_nonce'] ) && ! wp_verify_nonce( sanitize_text_field( $_GET['arplite_page_nonce'] ), 'arplite_page_nonce' ) ) ) {
+if ( ! defined( 'ABSPATH' ) || ! function_exists( 'current_user_can' ) || ! current_user_can( 'arplite_view_pricingtables' ) || ! isset( $_GET['arprice_page_nonce'] ) || ( isset( $_GET['arprice_page_nonce'] ) && ! wp_verify_nonce( sanitize_text_field( $_GET['arprice_page_nonce'] ), 'arprice_page_nonce' ) ) ) {
 	exit;
 }
 
+global $arplite_pricingtable, $arpricelite_default_settings, $arpricelite_analytics, $arpricelite_fonts, $arpricelite_version, $arprice_font_awesome_icons, $arpricelite_img_css_version, $arplite_subscription_time, $arpricelite_form, $wpdb, $arpricemain;
 
-global $arplite_pricingtable, $arpricelite_default_settings, $arpricelite_analytics, $arpricelite_fonts, $arpricelite_version, $arprice_font_awesome_icons, $arpricelite_img_css_version, $arplite_subscription_time, $arpricelite_form, $wpdb;
+if( !$arpricemain->arprice_is_pro_active() ){
 
-$editable_templates = 'SELECT t.*, COUNT(a.pricing_table_id) as views FROM ' . $wpdb->prefix . 'arplite_arprice t LEFT JOIN ' . $wpdb->prefix . 'arplite_arprice_analytics a ON t.ID = a.pricing_table_id WHERE t.is_template = %d GROUP BY t.ID ORDER BY t.ID DESC';
-$arp_my_templates   = $wpdb->get_results( $wpdb->prepare( $editable_templates, 0 ) ); //phpcs:ignore
+	$editable_templates = 'SELECT t.*, COUNT(a.pricing_table_id) as views FROM ' . $wpdb->prefix . 'arplite_arprice t LEFT JOIN ' . $wpdb->prefix . 'arplite_arprice_analytics a ON t.ID = a.pricing_table_id WHERE t.is_template = %d GROUP BY t.ID ORDER BY t.ID DESC';
+	$arp_my_templates   = $wpdb->get_results( $wpdb->prepare( $editable_templates, 0 ) ); //phpcs:ignore
+} else {
+	$editable_templates = "SELECT t.* FROM `" . $wpdb->prefix."arp_arprice` t WHERE t.is_template = %d GROUP BY t.ID ORDER BY t.ID DESC";
+	$arp_my_templates = $wpdb->get_results($wpdb->prepare($editable_templates, 0));//phpcs:ignore
+}
 
 if ( ! extension_loaded( 'dom' ) || ! extension_loaded( 'gd' ) ) {
+
 	echo "<div class='notice notice-error'>";
 		echo '<p>';
-			echo esc_html__( 'ARPricelite requires to have the following PHP modules/extensions to work properly. Kindly contact your hosting provider to install these modules/extensions.', 'arprice-responsive-pricing-table' );
+			echo esc_html__( 'ARPrice requires to have the following PHP modules/extensions to work properly. Kindly contact your hosting provider to install these modules/extensions.', 'arprice-responsive-pricing-table' );
 			echo "<ul class='arplite_required_modules'>";
 				echo '<li>PHP-XML/DOM</li>';
 				echo '<li>GD Library</li>';
@@ -24,12 +30,16 @@ if ( ! extension_loaded( 'dom' ) || ! extension_loaded( 'gd' ) ) {
 }
 
 ?>
+
+<?php if( !$arpricemain->arprice_is_pro_active() ){ ?>
+
 <div id="arp_loader_div" class="arp_loader" style="display: none;">
 	<div class="arp_loader_img"></div>
 </div>
 <input type="hidden" name="arp_version" id="arp_version" value="<?php echo esc_html( $arpricelite_version ); ?>" />
 <input type="hidden" name="arp_request_version" id="arp_request_version" value="<?php echo get_bloginfo( 'version' ); //phpcs:ignore ?>" />
 <?php
+
 	$now       = current_time('timestamp'); /* or your date as well */
 	$your_date = get_option( 'arplite_display_popup_date' );
 	$datediff  = $now - $your_date;
@@ -44,101 +54,84 @@ if ( ! extension_loaded( 'dom' ) || ! extension_loaded( 'gd' ) ) {
 <input type="hidden" name="arp_restrict_dashboard" id="arp_restrict_dashboard" value="<?php echo esc_attr( get_option( 'arplite_is_dashboard_visited' ) ); ?>" />
 <input type="hidden" name="arp_tour_guide_value" id="arp_tour_guide_value" value="<?php echo esc_attr( get_option( 'arpricelite_tour_guide_value' ) ); ?>" />
 <input type="hidden" name="ajaxurl" id="ajaxurl" value="<?php echo admin_url( 'admin-ajax.php' ); //phpcs:ignore ?>" />
-<input type="hidden" name="arp_admin_url" id="arp_admin_url" value="<?php echo admin_url( 'admin.php?page=arpricelite' ); //phpcs:ignore ?>">
+<input type="hidden" name="arp_admin_url" id="arp_admin_url" value="<?php echo admin_url( 'admin.php?page=arprice' ); //phpcs:ignore ?>">
 <input type="hidden" name="arplite_display_sale_popup" id="arplite_display_sale_popup" value="<?php echo esc_attr( get_option( 'arplite_display_bf_sale_popup' ) ); ?>" />
+
+<?php } else {
+	global $arpricemain;
+	$arpricemain->arprice_render_lisitng_settings('arprice_hidden_input');
+	
+}?>
+
 <?php $arplite_nonce_field = wp_create_nonce( 'arplite_wp_nonce' ); ?>
 <input type="hidden" name="_wpnonce_arplite" value="<?php echo esc_attr( $arplite_nonce_field ); ?>" />
+
 <div class="arprice_container">
 	<div class="dashboard_error_message" id="dashboard_error_message">
 		<div class="message_descripiton"></div>
 	</div>
 	<div class="arprice_template_listing_top_belt">
 		<div class="arprice_template_listing_logo"></div>
-		<ul class="arprice_template_listing_tab_wrapper">
-			<?php
-
-				$active_tab_class    = 'arp_active';
-				$active_template_tab = '';
-			if ( isset( $arp_my_templates ) && is_array( $arp_my_templates ) && count( $arp_my_templates ) > 0 ) {
-				$active_tab_class    = '';
-				$active_template_tab = 'arp_active';
-				?>
-				<li class="arprice_template_listing_tab arp_active" id="arprice_templates"><?php esc_html_e( 'MY PRICING TABLES', 'arprice-responsive-pricing-table' ); ?></li>
+			<ul class="arprice_template_listing_tab_wrapper">
 				<?php
 
-			}
-			?>
-			<li class="arprice_template_listing_tab <?php echo esc_attr( $active_tab_class ); ?>" id="arp_create_new_template"><?php esc_html_e( 'CREATE NEW', 'arprice-responsive-pricing-table' ); ?></li>
-		</ul>
+					$active_tab_class    = 'arp_active';
+					$active_template_tab = '';
+					if ( isset( $arp_my_templates ) && is_array( $arp_my_templates ) && count( $arp_my_templates ) > 0 ) {
+						$active_tab_class    = '';
+						$active_template_tab = 'arp_active'; ?>
+						<li class="arprice_template_listing_tab arp_active" id="arprice_templates"><?php esc_html_e( 'MY PRICING TABLES', 'arprice-responsive-pricing-table' ); ?></li>
+					<?php } ?>
+				<li class="arprice_template_listing_tab <?php echo esc_attr( $active_tab_class ); ?>" id="arp_create_new_template"><?php esc_html_e( 'CREATE NEW', 'arprice-responsive-pricing-table' ); ?></li>
+			</ul>
 		<?php if ( isset( $arp_my_templates ) && is_array( $arp_my_templates ) && count( $arp_my_templates ) > 0 ) { ?>
 		<button type="button" name="create_new_table" class="arp_create_new_pricing_table_btn arp_active" id="create_new_table"><?php esc_html_e( 'Add New', 'arprice-responsive-pricing-table' ); ?></button>
 		<?php } ?>
 		<button type="button" name="arp_go_create_new_table" class="arp_go_create_new_pricing_table_arrow" id="arp_go_create_new_table"></button>
 	</div>
+	<!-- arprice template listing contatiner -->
 	<div class="arprice_template_listing_container">
-		<div class="arprice_template_listing_tab_container <?php echo esc_attr( $active_template_tab ); ?>" id="arprice_templates">
-		<?php
-		
-		if(isset($_GET['arpricelite_show_deal']) && $_GET['arpricelite_show_deal'] == "yes"){
-			$arp_current_date = current_time('timestamp', true );
-			$arp_sale_start_time = '1700483400';
-			$arp_sale_end_time = '1701541800';
-	
-			if( $arp_current_date >= $arp_sale_start_time && $arp_current_date <= $arp_sale_end_time ){ ?>
-				<div class="arp-dialog_wrapper">
-					<div id="black_friday_popup" >
-						<div id='popup_image_click'>
-							<img src="<?php echo esc_url( ARPLITE_PRICINGTABLE_IMAGES_URL );?>/popup-img.png" alt="popup" class='arprice_template_thumb_popup'>
-							<button class='arprice_template_thumb_popup_button' >Upgrade Now</button> 
-						</div>
-						<div id="nav_style_close" class="arprice_template_thumb_popup_close_button"><img src="<?php echo esc_url( ARPLITE_PRICINGTABLE_IMAGES_URL );?>/error-icon.png" /></div>
-					</div>
-				</div>
-			<?php 
-			}
-		} ?>
-			<?php
-			foreach ( $arp_my_templates as $key => $template ) {
+		<div class="arprice_template_listing_tab_container <?php echo esc_attr( $active_template_tab ); ?>" id="arprice_templates" style="<?php //echo ( $setact != 1 ) ? 'margin-top:10px;' : ''; ?>">
+			<?php if( !$arpricemain->arprice_is_pro_active() ){ 
 
-				$template_view = 0;
-
-				$template_opt       = maybe_unserialize( $template->general_options );
-				$template_name      = $template_opt['template_setting']['template'];
-				$reference_template = $template_opt['general_settings']['reference_template'];
-				$table_name         = $template->table_name;
-				$arp_template_id    = $template->ID;
-				$total_visit        = $template->views;
-				$last_update_date   = $template->arp_last_updated_date;
-				$thumb_img_dir      = ARPLITE_PRICINGTABLE_UPLOAD_DIR . '/template_images/arplitetemplate_' . $arp_template_id . '_large.png';
-				$thumb_img_path     = ARPLITE_PRICINGTABLE_UPLOAD_URL . '/template_images/arplitetemplate_' . $arp_template_id . '_large.png';
 				
-				if ( $total_visit > 0 ) {
-					$template_view = 1;
-				}
+				foreach ( $arp_my_templates as $key => $template ) {
 
-				$date_format = get_option( 'date_format' );
-				if ( $last_update_date == '0000-00-00 00:00:00' ) {
-					$last_update_date = $template->create_date;
-				}
-				$date_to_display = date( $date_format, strtotime( $last_update_date ) );
+					$template_view = 0;
 
-				?>
+					$template_opt       = maybe_unserialize( $template->general_options );
+					$template_name      = $template_opt['template_setting']['template'];
+					$reference_template = $template_opt['general_settings']['reference_template'];
+					$table_name         = $template->table_name;
+					$arp_template_id    = $template->ID;
+					$total_visit        = $template->views;
+					$last_update_date   = $template->arp_last_updated_date;
+					$thumb_img_dir      = ARPLITE_PRICINGTABLE_UPLOAD_DIR . '/template_images/arplitetemplate_' . $arp_template_id . '_large.png';
+					$thumb_img_path     = ARPLITE_PRICINGTABLE_UPLOAD_URL . '/template_images/arplitetemplate_' . $arp_template_id . '_large.png';
+					
+					if ( $total_visit > 0 ) {
+						$template_view = 1;
+					}
+
+					$date_format = get_option( 'date_format' );
+					if ( $last_update_date == '0000-00-00 00:00:00' ) {
+						$last_update_date = $template->create_date;
+					}
+					$date_to_display = date( $date_format, strtotime( $last_update_date ) ); ?>
+
 					<div class="arprice_editable_template_container" id="arp_template_<?php echo esc_attr( $arp_template_id ); ?>">
-
 						<div class="arprice_editable_template_div">
-						<?php
-							if( ! file_exists( $thumb_img_dir ) ){
-								?> <div class="no_image_div"><span class="no_image_text">No Image</span></div> <?php
-							} else {
-								?> <div class="arprice_template_thumb_box" style="background: #ffffff url(<?php echo esc_url( $thumb_img_path ); ?>) no-repeat center;"></div> <?php
-							}
-						?>
+							<?php 
+								if( ! file_exists( $thumb_img_dir ) ){
+									?> <div class="no_image_div"><span class="no_image_text">No Image</span></div> <?php
+								} else {
+									?> <div class="arprice_template_thumb_box" style="background: #ffffff url(<?php echo esc_url( $thumb_img_path ); ?>) no-repeat center;"></div> <?php
+								} ?>
 							<div class="arprice_template_options_container">    
-									<div class="arprice_template_options arprice_template_preview template_action_btn" onClick='arp_price_preview_home("<?php echo $arpricelite_form->get_direct_link( esc_html( $template->ID ), true ); //phpcs:ignore ?>");' title="<?php esc_html_e( 'Preview', 'arprice-responsive-pricing-table' ); ?>" ></div> 
-									<div class="arprice_template_options arprice_template_edit template_action_btn" title="<?php esc_html_e( 'Select Table', 'arprice-responsive-pricing-table' ); ?>" onclick="window.location.href = '<?php echo admin_url( 'admin.php?page=arpricelite&arp_action=edit&eid=' . esc_html( $template->ID ) ); //phpcs:ignore ?>'"></div>
-									<div class="arprice_template_options arprice_template_clone template_action_btn" id="clone_template" data-url="<?php echo admin_url( 'admin.php?page=arpricelite&arp_action=new&eid=' . esc_html( $template->ID ) ); //phpcs:ignore ?>" title="<?php esc_html_e( 'Clone Table', 'arprice-responsive-pricing-table' ); ?>"></div>
-									<div id="delete_template" class="arprice_template_options arprice_template_delete template_action_btn" data-template-id="<?php echo esc_html( $template->ID ); ?>" title="<?php esc_html_e( 'Delete Table', 'arprice-responsive-pricing-table' ); ?>"></div>    
-
+								<div class="arprice_template_options arprice_template_preview template_action_btn" onClick='arp_price_preview_home("<?php echo $arpricelite_form->get_direct_link( esc_html( $template->ID ), true ); //phpcs:ignore ?>");' title="<?php esc_html_e( 'Preview', 'arprice-responsive-pricing-table' ); ?>" ></div> 
+								<div class="arprice_template_options arprice_template_edit template_action_btn" title="<?php esc_html_e( 'Select Table', 'arprice-responsive-pricing-table' ); ?>" onclick="window.location.href = '<?php echo admin_url( 'admin.php?page=arprice&arp_action=edit&eid=' . esc_html( $template->ID ) ); //phpcs:ignore ?>'"></div>
+								<div class="arprice_template_options arprice_template_clone template_action_btn" id="arplite_clone_template" data-url="<?php echo admin_url( 'admin.php?page=arprice&arp_action=new&eid=' . esc_html( $template->ID ) ); //phpcs:ignore ?>" title="<?php esc_html_e( 'Clone Table', 'arprice-responsive-pricing-table' ); ?>"></div>
+								<div id="delete_template" class="arprice_template_options arprice_template_delete template_action_btn" data-template-id="<?php echo esc_html( $template->ID ); ?>" title="<?php esc_html_e( 'Delete Table', 'arprice-responsive-pricing-table' ); ?>"></div>
 							</div>
 							<hr class="arprice_template_seperator">
 							<div class="arprice_template_description_container">
@@ -162,15 +155,22 @@ if ( ! extension_loaded( 'dom' ) || ! extension_loaded( 'gd' ) ) {
 									<div class="arprice_template_description_content" id="arprice_template_shortcode" data-copy-title="<?php esc_html_e( 'Click to Copy', 'arprice-responsive-pricing-table' ); ?>" data-copied-title="<?php esc_html_e( 'Copied to Clipboard', 'arprice-responsive-pricing-table' ); ?>"><?php echo '[ARPLite id=' . esc_html( $arp_template_id ) . ']'; ?></div>
 								</div>
 							</div>
-						</div>
-
-						
+						</div>	
 					</div>
-				<?php
-			}
-			?>
+					<?php
+				}
+				?>
+		<?php } else { 
+			$arpricemain->arprice_render_lisitng_settings('arprice_template_listing_div');
+		}?>
 		</div>
 		<div class="arprice_template_listing_tab_container <?php echo esc_attr( $active_tab_class ); ?>" id="arp_create_new_template">
+		<?php
+			if( $arpricemain->arprice_is_pro_active() ){
+				global $arprice_global_pro_settings;
+				$arprice_global_pro_settings->arprice_pro_render_license_notice_block();
+			}
+		?>
 			<h2 class="arprice_create_new_template_title"><?php esc_html_e( 'Create New Table', 'arprice-responsive-pricing-table' ); ?></h2>
 			<div class="arprice_add_new_pricing_table_wrapper">
 				<div class="arprice_new_template_box arp_create_new">
@@ -184,11 +184,46 @@ if ( ! extension_loaded( 'dom' ) || ! extension_loaded( 'gd' ) ) {
 					<span class="arprice_new_template_box_title"><?php esc_html_e( 'Install Free Samples', 'arprice-responsive-pricing-table' ); ?></span>
 					<span class="arprice_new_template_box_subtitle"><?php esc_html_e( 'Ready made pricing templates', 'arprice-responsive-pricing-table' ); ?></span>
 					<button class="arprice_box_button" id="arprice_download_sample_button" type="button"><?php esc_html_e( 'Browse Samples', 'arprice-responsive-pricing-table' ); ?></button>
-					<span class="arpricelite_pro_version_notice"><i class="fas fa-lock"></i>&nbsp;<?php esc_html_e( 'Premium Version Only', 'arprice-responsive-pricing-table' ); ?>&nbsp;<i class="fas fa-lock"></i></span>
+					<?php if(!$arpricemain->arprice_is_pro_active()) { ?> <span class="arpricelite_pro_version_notice"><i class="fas fa-lock"></i>&nbsp;<?php esc_html_e( 'Premium Version Only', 'arprice-responsive-pricing-table' ); ?>&nbsp;<i class="fas fa-lock"></i></span> <?php } ?>
 				</div>
 			</div>
 		</div>
 	</div>
+	<?php
+	if( !$arpricemain->arprice_is_pro_active() ){ 
+	if(isset($_GET['arpricelite_show_deal']) && $_GET['arpricelite_show_deal'] == "yes"){
+		$arp_current_date = current_time('timestamp', true );
+		$arp_sale_start_time = '1732064400';
+		$arp_sale_end_time = '1733270399';
+
+		if( $arp_current_date >= $arp_sale_start_time && $arp_current_date <= $arp_sale_end_time ){ 
+
+			if ( is_ssl() ) {
+				$google_font_url = 'https://fonts.googleapis.com/css?family=Poppins';
+			} else {
+				$google_font_url = 'http://fonts.googleapis.com/css?family=Poppins';
+			}
+			$google_font_url_one = esc_url_raw( $google_font_url );
+			wp_enqueue_style( 'arplite-sale-google-fonts', $google_font_url_one, array(), $arpricelite_version );
+
+			
+			?>
+			<div class="arp-dialog_wrapper">
+				<div id="black_friday_popup" >
+					<div id='popup_image_click'>
+						<img src="<?php echo esc_url( ARPLITE_PRICINGTABLE_IMAGES_URL );?>/arprice-blf-popup-web.webp" alt="popup" class='arprice_template_thumb_popup'>
+						<button class='arprice_template_thumb_popup_button' >UPGRADE NOW</button> 
+					</div>
+					<div id="nav_style_close" class="arprice_template_thumb_popup_close_button"><img src="<?php echo esc_url( ARPLITE_PRICINGTABLE_IMAGES_URL );?>/error-icon.png" /></div>
+				</div>
+			</div>
+		<?php 
+		}
+	}
+	}
+	?>
+	<!-- Select temaplate container -->
+	<?php if( !$arpricemain->arprice_is_pro_active() ){ ?>
 	<div class="arprice_select_template_container">
 		<h2 class="arprice_select_template_title"><?php esc_html_e( 'Select Template', 'arprice-responsive-pricing-table' ); ?></h2>
 		<?php
@@ -226,7 +261,7 @@ if ( ! extension_loaded( 'dom' ) || ! extension_loaded( 'gd' ) ) {
 					<div class="arprice_select_template_bg_img" style="background:url(<?php echo esc_url( $template_img_url ); ?>) no-repeat top left;" arp_template="<?php echo esc_url( $template_img_url ); ?>" arp_template_hover="<?php echo esc_url( $template_img_url_hover ); ?>"></div>
 					<div class="arprice_select_template_action_div">
 						<div class="arprice_select_template_action_btn arprice_preview_template" id="arprice_preview_template" title="<?php esc_html_e( 'Preview', 'arprice-responsive-pricing-table' ); ?>" onClick='arp_price_preview_home("<?php echo $arpricelite_form->get_direct_link( esc_html( $template->ID ), true ); //phpcs:ignore ?>");'></div>
-						<div class="arprice_select_template_action_btn arpice_clone_template" id="clone_template" title="<?php esc_html_e( 'Select', 'arprice-responsive-pricing-table' ); ?>" data-url="<?php echo admin_url( 'admin.php?page=arpricelite&arp_action=new&eid=' . esc_html( $template->ID ) ); //phpcs:ignore ?>"></div>
+						<div class="arprice_select_template_action_btn arpice_clone_template" id="arplite_clone_template" title="<?php esc_html_e( 'Select', 'arprice-responsive-pricing-table' ); ?>" data-url="<?php echo admin_url( 'admin.php?page=arprice&arp_action=new&eid=' . esc_html( $template->ID ) ); //phpcs:ignore ?>"></div>
 					</div>
 				</div>
 			</div>
@@ -250,7 +285,7 @@ if ( ! extension_loaded( 'dom' ) || ! extension_loaded( 'gd' ) ) {
 						<div class="arprice_select_template_bg_img" style="background:url(<?php echo esc_url( $template_img_url ); ?>) no-repeat top left;" arp_template="<?php echo esc_url( $template_img_url ); ?>" arp_template_hover="<?php echo esc_url( $template_img_url_hover ); ?>"></div>
 						<div class="arprice_select_template_action_div">
 							<div class="arprice_select_template_action_btn arprice_preview_template" id="arprice_preview_template" title="<?php esc_html_e( 'Preview', 'arprice-responsive-pricing-table' ); ?>" data-img-url="<?php echo esc_url( ARPLITE_PRICINGTABLE_IMAGES_URL ) . '/' . esc_attr( $value ) . '_v' . esc_attr( $arpricelite_img_css_version ) . '_preview.png'; ?>" data-id="<?php echo esc_attr( $value ); ?>" onClick='arp_price_preview_home(this);'></div>
-							<div class="arprice_select_template_action_btn arpice_clone_template pro_only" id="clone_template" title="<?php esc_html_e( 'Select', 'arprice-responsive-pricing-table' ); ?>" ></div>
+							<div class="arprice_select_template_action_btn arpice_clone_template pro_only" id="arplite_clone_template" title="<?php esc_html_e( 'Select', 'arprice-responsive-pricing-table' ); ?>" ></div>
 						</div>
 					</div>
 				</div>
@@ -259,7 +294,12 @@ if ( ! extension_loaded( 'dom' ) || ! extension_loaded( 'gd' ) ) {
 			?>
 		</div>
 	</div>
+	<?php } else {
+		
+		$arpricemain->arprice_render_lisitng_settings('arprice_select_template_container');
+	}?>
 
+	<!-- Download sample template -->
 	<div class="arprice_download_sample_container">
 		<div class="error_message arp_sample_download_error" id="arp_download_error_message"> 
 			<?php esc_html_e( 'Something went wrong, while downloading sample template. Please try again', 'arprice-responsive-pricing-table' ); ?>
@@ -359,86 +399,85 @@ if ( ! extension_loaded( 'dom' ) || ! extension_loaded( 'gd' ) ) {
 </div>
 <!-- Restrict sample download -->
 
+<?php if( $arpricemain->arprice_is_pro_active() ) { $arpricemain->arprice_render_lisitng_settings('arprice_get_analytics_data'); } ?> 
+ 
 
-<div class="arprice_information_block">
-	<a href="https://www.arpriceplugin.com/documentation/getting-started/" target="_blank" class="arprice_info_icon arprice_doc_icon arp_guid_btn" title="<?php esc_html_e( 'Documentation', 'arprice-responsive-pricing-table' ); ?>"></a>
-	<div class="arprice_info_icon arprice_guide_icon arp_guid_btn" id="arp_tour_guide_start" title="<?php esc_html_e( 'Tour Guide', 'arprice-responsive-pricing-table' ); ?>"></div>
-	<br><br>
-</div>
-
-<div class="arp_upgrade_modal" id="arplite_custom_css_notice" style="display:none;">
-	<div class="upgrade_modal_top_belt">
-		<div class="logo" style="text-align:center;"><img src="<?php echo esc_url( ARPLITE_PRICINGTABLE_IMAGES_URL ); ?>/arprice_update_logo.png" /></div>
-		<div id="nav_style_close" class="close_button b-close"><img src="<?php echo esc_url( ARPLITE_PRICINGTABLE_IMAGES_URL ); ?>/arprice_upgrade_close_img.png" /></div>
-	</div>
-	<div class="upgrade_title"><?php esc_html_e( 'Upgrade To Premium Version.', 'arprice-responsive-pricing-table' ); ?></div>
-	<div class="upgrade_message"><?php esc_html_e( 'To unlock this Feature, Buy Premium Version for $27.00 Only.', 'arprice-responsive-pricing-table' ); ?></div>
-	<div class="upgrade_modal_btn">
-		<button id="pro_upgrade_button"  type="button" class="buy_now_button"><?php esc_html_e( 'Buy Now', 'arprice-responsive-pricing-table' ); ?></button>
-		<button id="pro_upgrade_cancel_button"  class="learn_more_button" type="button">Learn More</button>
-	</div>
-</div>
-
-<div class="arp_model_box" id="arp_pricing_table_pro_preview" style="display:none;background:white;">
-	<div class="arp_model_preview_belt">
-		<div class="arp_pro_model_notice">
-			<?php esc_html_e( 'This template is available in premium version only', 'arprice-responsive-pricing-table' ); ?>
+<?php if( !$arpricemain->arprice_is_pro_active() ){ ?>
+	<div class="arp_upgrade_modal" id="arplite_custom_css_notice" style="display:none;">
+		<div class="upgrade_modal_top_belt">
+			<div class="logo" style="text-align:center;"><img src="<?php echo esc_url( ARPLITE_PRICINGTABLE_IMAGES_URL ); ?>/arprice_update_logo.png" /></div>
+			<div id="nav_style_close" class="close_button b-close"><img src="<?php echo esc_url( ARPLITE_PRICINGTABLE_IMAGES_URL ); ?>/arprice_upgrade_close_img.png" /></div>
 		</div>
-		<div class="preview_close" id="prev_close_icon">
-			<span class="modal_close_btn b-close"></span>
+		<div class="upgrade_title"><?php esc_html_e( 'Upgrade To Premium Version.', 'arprice-responsive-pricing-table' ); ?></div>
+		<div class="upgrade_message"><?php esc_html_e( 'To unlock this Feature, Buy Premium Version for $27.00 Only.', 'arprice-responsive-pricing-table' ); ?></div>
+		<div class="upgrade_modal_btn">
+			<button id="pro_upgrade_button"  type="button" class="buy_now_button"><?php esc_html_e( 'Buy Now', 'arprice-responsive-pricing-table' ); ?></button>
+			<button id="pro_upgrade_cancel_button"  class="learn_more_button" type="button">Learn More</button>
 		</div>
 	</div>
-	<div class="preview_model" style="float:left;width:100%;height:90%;">
 
-	</div>
-</div>
-
-<div class="arp_upgrade_modal" id="arplite_save_table_notice_editor" style="display:none;">
-	<div class="upgrade_modal_top_belt">
-		<div class="logo" style="text-align:center;"><img src="<?php echo esc_url( ARPLITE_PRICINGTABLE_IMAGES_URL ); ?>/arprice_update_logo.png" /></div>
-		<div id="nav_style_close" class="close_button b-close"><img src="<?php echo esc_url( ARPLITE_PRICINGTABLE_IMAGES_URL ); ?>/arprice_upgrade_close_img.png" /></div>
-	</div>
-	<div class="upgrade_title"><?php esc_html_e( 'Upgrade To Premium Version.', 'arprice-responsive-pricing-table' ); ?></div>
-	<div class="upgrade_message"><?php esc_html_e( 'You can create maximum 4 tables in free version.', 'arprice-responsive-pricing-table' ); ?></div>
-	<div class="upgrade_modal_btn">
-		<button id="pro_upgrade_button"  type="button" class="buy_now_button"><?php esc_html_e( 'Buy Now', 'arprice-responsive-pricing-table' ); ?></button>
-		<button id="pro_upgrade_cancel_button"  class="learn_more_button" type="button">Learn More</button>
-	</div>
-</div>
-
-<div class="arp_subscription_model" id="arplite_subscription_model" style="display:none;">
-	<div class="arp_subscription_model_close_btn"><img src="<?php echo esc_url( ARPLITE_PRICINGTABLE_IMAGES_URL ) . '/icons/close_button.png'; ?>" height="15" width="15" /></div>
-	<form name="arplite_subscription" method="get" action="<?php echo admin_url( 'admin.php' ); //phpcs:ignore ?>">
-		<input type="hidden" name="page" value="arpricelite" />
-		<div class="arp_subscription_header_wrapper">
-			<div class="arp_subscription_header">
-				<div class="arp_subscription_model_title"> <?php esc_html_e( 'Subscribe with Us', 'arprice-responsive-pricing-table' ); ?> </div>
-				<div class="arp_subscription_model_subtitle">Get interesting offers and update notifications straight into your email Inbox. Only few mails a year.</div>
-				<div class="arp_subscription_form">
-					<input type="text" name="subscription_email" id="subscription_email" placeholder="Enter Your Email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Your Email'" class="arp_subscription_field" />
-					<div class="arperrmessage subscribeerror" id="subscription_email_error" style="display:none;"><?php esc_html_e( 'This field cannot be blank.', 'arprice-responsive-pricing-table' ); ?></div>
-				</div>
+	<div class="arp_model_box" id="arp_pricing_table_pro_preview" style="display:none;background:white;">
+		<div class="arp_model_preview_belt">
+			<div class="arp_pro_model_notice">
+				<?php esc_html_e( 'This template is available in premium version only', 'arprice-responsive-pricing-table' ); ?>
+			</div>
+			<div class="preview_close" id="prev_close_icon">
+				<span class="modal_close_btn b-close"></span>
 			</div>
 		</div>
-		<div class="arp_subscription_submit_button_wrapper">
-			<button type="button" name="arp_subscribe" class="arp_subscribe_button" id="subscribe-arprice" value="subscribe"><?php esc_html_e( 'Send it now', 'arprice-responsive-pricing-table' ); ?></button>
-			<span id="subscribe_loader" style="display:none;"><img src="<?php echo esc_url( ARPLITE_PRICINGTABLE_IMAGES_URL ) . '/ajax_loader_add_new_column.gif'; ?>" height="15" /></span>
-			<span class="arplite_subscription_note"><?php esc_html_e( 'We respect your privacy. We will NEVER share your detail anywhere.', 'arprice-responsive-pricing-table' ); ?></span>
-		</div>
-	</form>
-</div>
+		<div class="preview_model" style="float:left;width:100%;height:90%;">
 
-<div class="arp_black_friday_sale_popup_wrapper">
-	<div class="arp_black_friday_sale_popup_container">
-		<span class="arp_black_friday_sale_close_btn" id="arp_black_friday_sale_close_btn">
-			<i class="fa fa-times fa-lg"></i>
-		</span>
-		<span class="arp_bf_sale_title">UPGRADE TO PREMIUM VERSION</span>
-		<span class="arp_bf_sale_text">
-			BLACK FRIDAY SALE
-		</span>
-		<span class="arp_bf_discount_price">FLAT 50% OFF PREMIUM</span>
-		<span class="arp_bf_limited_text_wrapper">LIMITED TIME OFFER</span>
-		<a class="arf_bf_popup_btn" href="https://1.envato.market/9o9x4" target='_blank'>UPGRADE TO PREMIUM</a>
+		</div>
 	</div>
-</div>
+
+	<div class="arp_upgrade_modal" id="arplite_save_table_notice_editor" style="display:none;">
+		<div class="upgrade_modal_top_belt">
+			<div class="logo" style="text-align:center;"><img src="<?php echo esc_url( ARPLITE_PRICINGTABLE_IMAGES_URL ); ?>/arprice_update_logo.png" /></div>
+			<div id="nav_style_close" class="close_button b-close"><img src="<?php echo esc_url( ARPLITE_PRICINGTABLE_IMAGES_URL ); ?>/arprice_upgrade_close_img.png" /></div>
+		</div>
+		<div class="upgrade_title"><?php esc_html_e( 'Upgrade To Premium Version.', 'arprice-responsive-pricing-table' ); ?></div>
+		<div class="upgrade_message"><?php esc_html_e( 'You can create maximum 4 tables in free version.', 'arprice-responsive-pricing-table' ); ?></div>
+		<div class="upgrade_modal_btn">
+			<button id="pro_upgrade_button"  type="button" class="buy_now_button"><?php esc_html_e( 'Buy Now', 'arprice-responsive-pricing-table' ); ?></button>
+			<button id="pro_upgrade_cancel_button"  class="learn_more_button" type="button">Learn More</button>
+		</div>
+	</div>
+
+	<div class="arp_subscription_model" id="arplite_subscription_model" style="display:none;">
+		<div class="arp_subscription_model_close_btn"><img src="<?php echo esc_url( ARPLITE_PRICINGTABLE_IMAGES_URL ) . '/icons/close_button.png'; ?>" height="15" width="15" /></div>
+		<form name="arplite_subscription" method="get" action="<?php echo admin_url( 'admin.php' ); //phpcs:ignore ?>">
+			<input type="hidden" name="page" value="arpricelite" />
+			<div class="arp_subscription_header_wrapper">
+				<div class="arp_subscription_header">
+					<div class="arp_subscription_model_title"> <?php esc_html_e( 'Subscribe with Us', 'arprice-responsive-pricing-table' ); ?> </div>
+					<div class="arp_subscription_model_subtitle">Get interesting offers and update notifications straight into your email Inbox. Only few mails a year.</div>
+					<div class="arp_subscription_form">
+						<input type="text" name="subscription_email" id="subscription_email" placeholder="Enter Your Email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Your Email'" class="arp_subscription_field" />
+						<div class="arperrmessage subscribeerror" id="subscription_email_error" style="display:none;"><?php esc_html_e( 'This field cannot be blank.', 'arprice-responsive-pricing-table' ); ?></div>
+					</div>
+				</div>
+			</div>
+			<div class="arp_subscription_submit_button_wrapper">
+				<button type="button" name="arp_subscribe" class="arp_subscribe_button" id="subscribe-arprice" value="subscribe"><?php esc_html_e( 'Send it now', 'arprice-responsive-pricing-table' ); ?></button>
+				<span id="subscribe_loader" style="display:none;"><img src="<?php echo esc_url( ARPLITE_PRICINGTABLE_IMAGES_URL ) . '/ajax_loader_add_new_column.gif'; ?>" height="15" /></span>
+				<span class="arplite_subscription_note"><?php esc_html_e( 'We respect your privacy. We will NEVER share your detail anywhere.', 'arprice-responsive-pricing-table' ); ?></span>
+			</div>
+		</form>
+	</div>
+
+	<div class="arp_black_friday_sale_popup_wrapper">
+		<div class="arp_black_friday_sale_popup_container">
+			<span class="arp_black_friday_sale_close_btn" id="arp_black_friday_sale_close_btn">
+				<i class="fa fa-times fa-lg"></i>
+			</span>
+			<span class="arp_bf_sale_title">UPGRADE TO PREMIUM VERSION</span>
+			<span class="arp_bf_sale_text">
+				BLACK FRIDAY SALE
+			</span>
+			<span class="arp_bf_discount_price">FLAT 50% OFF PREMIUM</span>
+			<span class="arp_bf_limited_text_wrapper">LIMITED TIME OFFER</span>
+			<a class="arp_bf_popup_btn" href="https://1.envato.market/9o9x4" target='_blank'>UPGRADE TO PREMIUM</a>
+		</div>
+	</div>
+<?php } ?>
+<?php do_action( 'arprice_quick_help_links' ); ?>

@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 class arpricelite_analytics {
 
 	function __construct() {
@@ -45,7 +47,30 @@ class arpricelite_analytics {
 				$atts
 			)
 		);
+		global $is_gutenberg;
+		$is_gutenberg = false;
+		if( !empty( $atts['is_gutenberg'] ) && 'true' == $atts['is_gutenberg'] ){
+			$is_gutenberg = true;
+		}
 
+		global $is_beaverbuilder;
+		$is_beaverbuilder = false;
+		if( !empty( $atts['is_beaverbuilder'] ) && 'true' == $atts['is_beaverbuilder'] ){
+			$is_beaverbuilder = true;
+		}
+		
+		global $is_divibuilder;
+		$is_divibuilder = false;
+		if( !empty( $atts['is_divibuilder'] ) && 'true' == $atts['is_divibuilder'] ){
+			$is_divibuilder = true;
+		}
+
+		global $is_fusionbuilder;
+		$is_fusionbuilder = false;
+		if( !empty( $atts['is_fusionbuilder'] ) && 'true' == $atts['is_fusionbuilder'] ){
+			$is_fusionbuilder = true;
+		}
+		
 		$table_id = isset( $atts['id'] ) ? intval( $atts['id'] ) : '';
 
 		if ( $table_id == '' ) {

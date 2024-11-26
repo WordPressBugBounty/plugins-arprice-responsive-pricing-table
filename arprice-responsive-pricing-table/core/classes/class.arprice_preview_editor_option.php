@@ -1,8 +1,6 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 global $arpricelite_form, $arplite_mainoptionsarr, $arpricelite_default_settings;
 $arp_is_rtl             = is_rtl();

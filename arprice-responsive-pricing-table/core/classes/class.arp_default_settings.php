@@ -6,6 +6,9 @@
  *
  * @Package : ARPRicelite
  */
+
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 class arplite_default_settings {
 
 	function __construct() {

@@ -4,9 +4,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-function arplite_my_function_admin_bar() {
-	return false; }
+function arplite_my_function_admin_bar() { return false; }
 add_filter( 'show_admin_bar', 'arplite_my_function_admin_bar' );
+remove_action( 'wp_footer', 'the_block_template_skip_link' );
+ 
 ?>
 <!DOCTYPE html>
 

@@ -1,10 +1,15 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 class arpricelite_form {
 
 	function __construct() {
+		global $arpricemain;
 
-		add_action( 'init', array( $this, 'parse_standalone_request' ), 1 );
+		if(! $arpricemain->arprice_is_pro_active()){
+			add_action( 'init', array( $this, 'parse_standalone_request' ), 1 );
+		}
 		add_shortcode( 'arplite_header_image', array( $this, 'arplite_header_image_shortcode' ) );
 		add_action( 'wp_ajax_arplite_updatetabledata', array( $this, 'arp_save_pricing_table' ) );
 		add_filter( 'widget_text', array( $this, 'arplite_widget_text_filter' ), 9 );
@@ -17,6 +22,7 @@ class arpricelite_form {
 
 
 	function arplite_header_image_shortcode( $atts ) {
+		
 		global $arplite_is_lightbox;
 		$image_url        = isset( $atts['id'] ) ? $atts['id'] : '';
 		$open_in_lightbox = ( isset( $atts['open_in_lightbox'] ) && $atts['open_in_lightbox'] == 1 ) ? '1' : '';
@@ -180,7 +186,7 @@ class arpricelite_form {
 			$total = 1;
 		}
 
-		$column_order = json_encode( $new_col_order );
+		$column_order = wp_json_encode( $new_col_order );
 
 		$reference_template = isset( $posted_data['arp_reference_template'] ) ? stripslashes_deep( $posted_data['arp_reference_template'] ) : '';
 
@@ -958,7 +964,7 @@ class arpricelite_form {
 				$random = rand( 11, 9999 );
 			}
 			$preview_table['table_col_opt'] = $table_options;
-			update_option( 'arplite_previewtabledata_' . $random, json_encode( $preview_table ) );
+			update_option( 'arplite_previewtabledata_' . $random, wp_json_encode( $preview_table ) );
 			echo 'arplite_previewtabledata_' . esc_html( $random );
 		} else {
 			$ins   = $wpdb->query( $wpdb->prepare( 'UPDATE ' . $wpdb->prefix . 'arplite_arprice_options SET table_options = %s WHERE table_id = %d', $table_options, $table_id ) );
@@ -1098,9 +1104,9 @@ class arpricelite_form {
 	function get_direct_link( $tbl_id = '', $chk_preview = false ) {
 
 		if ( ! $chk_preview ) {
-			$target_url = esc_url( wp_nonce_url( get_home_url() . '/index.php', 'arplite_home_preview', '_wpnonce' ) . '&plugin=arpricelite&arpaction=preview&tbl=' . $tbl_id );
+			$target_url = esc_url( wp_nonce_url( get_home_url() . '/index.php', 'arplite_home_preview', '_wpnonce' ) . '&plugin=arprice&arpaction=preview&tbl=' . $tbl_id );
 		} else {
-			$target_url = esc_url( wp_nonce_url( get_home_url() . '/index.php', 'arplite_home_preview', '_wpnonce' ) . '&plugin=arpricelite&arpaction=preview&home_view=1&tbl=' . $tbl_id );
+			$target_url = esc_url( wp_nonce_url( get_home_url() . '/index.php', 'arplite_home_preview', '_wpnonce' ) . '&plugin=arprice&arpaction=preview&home_view=1&tbl=' . $tbl_id );
 		}
 
 		if ( is_ssl() ) {
@@ -1116,7 +1122,7 @@ class arpricelite_form {
 
 		$action = isset( $_REQUEST['arpaction'] ) ? sanitize_text_field( $_REQUEST['arpaction'] ) : '';
 
-		if ( ! empty( $plugin ) && $plugin == 'arpricelite' && ! empty( $action ) && $action == 'preview' ) {
+		if ( ! empty( $plugin ) && $plugin == 'arprice' && ! empty( $action ) && $action == 'preview' ) {
 
 			$table_id = isset( $_REQUEST['tbl'] ) ? intval( $_REQUEST['tbl'] ) : '';
 			$arpricelite_form->preview_table( $table_id );
@@ -1184,6 +1190,7 @@ class arpricelite_form {
 	}
 
 	function arp_render_customcss( $table_id, $general_option, $front_preview, $opts, $is_animated ) {
+ 
 		global $arplite_mainoptionsarr, $arpricelite_fonts, $arpricelite_form, $arpricelite_default_settings;
 
 		$template_section_array = $arpricelite_default_settings->arp_column_section_background_color();
@@ -2527,7 +2534,7 @@ class arpricelite_form {
 		$tablet_responsive_size  = get_option( 'arplite_tablet_responsive_size' );
 		$tablet_responsive_size  = $tablet_responsive_size + 1;
 
-		$returnstring .= '@media ( min-width:' . $tablet_responsive_size . 'px){';
+		$returnstring .= '@media ( min-width:'.$tablet_responsive_size.'px;){';
 		$returnstring .= '#ArpTemplate_main.arplite_front_main_container .arplitetemplate_' . $table_id . ' .ArpPricingTableColumnWrapper,';
 		$returnstring .= '.arplitetemplate_' . $table_id . ' .ArpPricingTableColumnWrapper{';
 		$returnstring .= 'width:' . $general_column_settings['all_column_width'] . 'px;';
@@ -2891,8 +2898,8 @@ class arpricelite_form {
 			$returnstring .= ' font-weight: ' . $general_column_settings['arp_price_text_bold_global'] . ';';
 		}
 
-		if ( isset( $general_column_settings['price_label_style_italic'] ) && $general_column_settings['price_label_style_italic'] != '' ) {
-			$returnstring .= ' font-style: ' . $general_column_settings['price_label_style_italic'] . ';';
+		if ( isset( $general_column_settings['arp_price_text_italic_global'] ) && $general_column_settings['arp_price_text_italic_global'] != '' ) {
+			$returnstring .= ' font-style: ' . $general_column_settings['arp_price_text_italic_global'] . ';';
 		}
 
 		if ( isset( $general_column_settings['arp_price_text_decoration_global'] ) && $general_column_settings['arp_price_text_decoration_global'] != '' ) {
@@ -2995,6 +3002,66 @@ class arpricelite_form {
 		return do_shortcode( $add_shortcode );
 	}
 
+	function arplite_load_js_css($table_id, $is_template,$is_gutenberg = true){
+		global $arpricelite_images_css_version,$posted_data,$arplite_pricingtable,$arplite_front_inline_css,$arpricelite_assset_version,$arpricelite_form;
+		
+        $arplite_db_version = get_option('arpricelite_version');
+		
+		if ( is_ssl() ) {
+            $upload_main_url = str_replace( 'http://', 'https://', ARPLITE_PRICINGTABLE_UPLOAD_URL . '/css/arplitetemplate_' . $table_id . '.css?var=' . $arplite_db_version);
+        } else {
+            $upload_main_url = ARPLITE_PRICINGTABLE_UPLOAD_URL . '/css/arplitetemplate_' . $table_id . '.css?var=' . $arplite_db_version;
+        }
+		$upload_main_url = esc_url_raw( $upload_main_url );
+		
+		
+
+		$return_link        = '';
+		$stylesheet_handler = 'arplitetemplate_'. $table_id;
+		$font_awesome_link = ARPLITE_PRICINGTABLE_URL . '/css/font-awesome.css?var' . $arpricelite_assset_version;
+		$arprice_table_css = ARPLITEURL . '/css/arprice_insert_form_style.css?var=' . $arpricelite_assset_version;
+		
+		global $is_gutenberg;
+		
+		$is_gutenberg = false;	
+		if(isset( $_REQUEST['context'] ) && 'edit' == $_REQUEST['context']){
+			$is_gutenberg = true;
+		}
+		// if(isset( $_REQUEST['context'] ) && 'edit' == $_REQUEST['context'] ||isset($_REQUEST['fl_builder'])){
+			if($is_gutenberg){
+						
+				$arplite_gutenberg_front_css = ARPLITEURL . "/css/arprice_front.css?var=". $arpricelite_assset_version;
+				$return_link .= "<link rel='stylesheet' type='text/css' id='{$stylesheet_handler}-fallback-css' href='{$upload_main_url}'>";
+				$return_link .= "<link rel='stylesheet' type='text/css' id='{$stylesheet_handler}-fallback-css' href='{$arplite_gutenberg_front_css}' />";
+				$return_link .= "<link rel='stylesheet' type='text/css' id='font-awesome-fallback-css' href='{$font_awesome_link}'>";
+				$return_link .= "<link rel='stylesheet' type='text/css' id='arprice_table-fallback-css' href='{$arprice_table_css}'>";
+			}
+		// }
+		global $is_beaverbuilder;
+		
+		if($is_beaverbuilder){
+			$arplite_gutenberg_front_css = ARPLITEURL . "/css/arprice_front.css?var=". $arpricelite_assset_version;
+			$return_link .= "<link rel='stylesheet' type='text/css' id='{$stylesheet_handler}-fallback-css' href='{$upload_main_url}'>";
+			$return_link .= "<link rel='stylesheet' type='text/css' id='{$stylesheet_handler}-fallback-css' href='{$arplite_gutenberg_front_css}' />";
+			$return_link .= "<link rel='stylesheet' type='text/css' id='font-awesome-fallback-css' href='{$font_awesome_link}'>";
+			$return_link .= "<link rel='stylesheet' type='text/css' id='arprice_table-fallback-css' href='{$arprice_table_css}'>";
+		}
+
+		global $is_fusionbuilder;
+		$is_fusionbuilder = false;
+		if(is_plugin_active('fusion-builder/fusion-builder.php') || is_plugin_active('fusion-core/fusion-core.php')){
+			$is_fusionbuilder = true;
+		}
+		if($is_fusionbuilder){
+			$arplite_gutenberg_front_css = ARPLITEURL . "/css/arprice_front.css?var=". $arpricelite_assset_version;
+				$return_link .= "<link rel='stylesheet' type='text/css' id='{$stylesheet_handler}-fallback-css' href='{$upload_main_url}'>";
+				$return_link .= "<link rel='stylesheet' type='text/css' id='{$stylesheet_handler}-fallback-css' href='{$arplite_gutenberg_front_css}' />";
+				$return_link .= "<link rel='stylesheet' type='text/css' id='font-awesome-fallback-css' href='{$font_awesome_link}'>";
+				$return_link .= "<link rel='stylesheet' type='text/css' id='arprice_table-fallback-css' href='{$arprice_table_css}'>";
+		}	
+		return $return_link;
+       
+	}
 	function get_table_enqueue_data( $tablearr = array() ) {
 
 		if ( ! $tablearr ) {

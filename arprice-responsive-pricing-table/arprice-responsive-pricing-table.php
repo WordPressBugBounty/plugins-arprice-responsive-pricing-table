@@ -2,12 +2,16 @@
 /**
   * Plugin Name: ARPrice Lite
   * Description: Responsive WordPress Pricing Table / Team Showcase Plugin
-  * Version: 3.6.4
+  * Version: 3.6.5
+  * Requires at least: 5.3.0
+  * Requires PHP:      5.6
   * Plugin URI: http://arpriceplugin.com
   * Author: Repute InfoSystems
   * Author URI: http://arpriceplugin.com
   * Text Domain: arprice-responsive-pricing-table
   * Domain Path: /languages
+  * License: GPLv2 or later
+  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
 $arplite_plugin_url = plugins_url( '', __FILE__ );
@@ -66,12 +70,12 @@ define( 'ARPLITE_PRICINGTABLE_UPLOAD_DIR', $upload_dir );
 
 define( 'ARPLITE_PRICINGTABLE_UPLOAD_URL', $upload_url );
 
-global $arplite_pricingtable;
+global $arplite_pricingtable, $arpricemain;
 $arplite_pricingtable = new ARPlite_PricingTable();
 
 /** Defining Pricing Table Version */
 global $arpricelite_version;
-$arpricelite_version = '3.6.4';
+$arpricelite_version = '3.6.5';
 
 global $arpricelite_assset_version;
 $arpricelite_assset_version = $arpricelite_version . '_' . rand( 1000, 9999 );
@@ -92,6 +96,8 @@ $arplite_subscription_time = '15';
 global $pricingtableliteajaxurl;
 $pricingtableliteajaxurl = admin_url( 'admin-ajax.php' );
 
+require_once __DIR__ .'/autoload.php';
+
 if ( file_exists( ARPLITE_PRICINGTABLE_CLASSES_DIR . '/class.arprice.php' ) ) {
 	require_once ARPLITE_PRICINGTABLE_CLASSES_DIR . '/class.arprice.php';
 }
@@ -108,9 +114,6 @@ if ( file_exists( ARPLITE_PRICINGTABLE_CLASSES_DIR . '/class.arprice_import_expo
 	require_once ARPLITE_PRICINGTABLE_CLASSES_DIR . '/class.arprice_import_export.php';
 }
 
-if ( file_exists( ARPLITE_PRICINGTABLE_CLASSES_DIR . '/class.arplite_growth_tools.php' ) ) {
-	require_once ARPLITE_PRICINGTABLE_CLASSES_DIR . '/class.arplite_growth_tools.php';
-}
 if ( file_exists( ARPLITE_PRICINGTABLE_CLASSES_DIR . '/class.arp_fonts.php' ) ) {
 	require_once ARPLITE_PRICINGTABLE_CLASSES_DIR . '/class.arp_fonts.php';
 }
@@ -123,12 +126,26 @@ if ( file_exists( ARPLITE_PRICINGTABLE_CLASSES_DIR . '/class.arprice_file_handle
 	require_once ARPLITE_PRICINGTABLE_CLASSES_DIR . '/class.arprice_file_handler.php';
 }
 
+if ( file_exists( ARPLITE_PRICINGTABLE_CLASSES_DIR . '/class.arprice_block_widget.php' ) ) {
+	require_once ARPLITE_PRICINGTABLE_CLASSES_DIR . '/class.arprice_block_widget.php';
+}
+
+if ( file_exists( ARPLITE_PRICINGTABLE_CLASSES_DIR . '/class.arprice_fusion_builder.php' ) ) {
+	require_once ARPLITE_PRICINGTABLE_CLASSES_DIR . '/class.arprice_fusion_builder.php';
+}
+
+if(is_plugin_active('beaver-builder-lite-version/fl-builder.php') || is_plugin_active('bb-plugin/fl-builder.php') && file_exists(ARPLITE_PRICINGTABLE_CLASSES_DIR.'/class.arprice_beaver_element.php')  ){
+	require_once(ARPLITE_PRICINGTABLE_CLASSES_DIR .'/class.arprice_beaver_element.php');
+}
+
 if ( is_plugin_active( 'elementor/elementor.php' ) && file_exists( ARPLITE_PRICINGTABLE_CLASSES_DIR . '/class.arpricelite_elementor.php' ) ) {
 	include_once ARPLITE_PRICINGTABLE_CLASSES_DIR . '/class.arpricelite_elementor.php';
 
 	global $arpricelite_elementor;
 	$arpricelite_elementor = new arpriceliteelementcontroller();
 }
+
+
 
 global $arpricelite_class;
 $arpricelite_class = new arpricelite();
@@ -141,9 +158,6 @@ $arpricelite_analytics = new arpricelite_analytics();
 
 global $arpricelite_import_export;
 $arpricelite_import_export = new arpricelite_import_export();
-
-global $arplite_growth_tools;
-$arplite_growth_tools = new arplite_growth_tools();
 
 global $arpricelite_fonts;
 $arpricelite_fonts = new arpricelite_fonts();
@@ -162,7 +176,7 @@ global $arplite_templatesectionsarr;
 global $arplite_templatecustomskinarr;
 global $arplite_templatehoverclassarr;
 
-global $arplite_is_animation, $arplite_has_tooltip, $arplite_has_fontawesome, $arplite_effect_css, $arplite_switch_css;
+global $arplite_is_animation, $arplite_has_tooltip, $arplite_has_fontawesome, $arplite_effect_css, $arplite_switch_css, $arpricemain;
 $arplite_is_animation    = 0;
 $arplite_has_tooltip     = 0;
 $arplite_has_fontawesome = 0;
@@ -182,21 +196,22 @@ class ARPlite_PricingTable {
 
 
 	function __construct() {
+
 		register_activation_hook( __FILE__, array( 'ARPlite_PricingTable', 'arpricelite_install' ) );
 
 		register_activation_hook( __FILE__, array( 'ARPlite_PricingTable', 'arpricelite_check_network_activation' ) );
 
 		register_uninstall_hook( __FILE__, array( 'ARPlite_PricingTable', 'uninstall' ) );
 
-		add_action( 'admin_menu', array( $this, 'pricingtablelite_menu' ), 27 );
+		//add_action( 'admin_menu', array( $this, 'pricingtablelite_menu' ), 27 );
 
 		add_action( 'wp_ajax_editplan', array( $this, 'editplan' ) );
 
 		add_action( 'wp_ajax_editpackage', array( $this, 'editpackage' ) );
 
-		add_action( 'admin_enqueue_scripts', array( $this, 'set_css' ), 10 );
+		//add_action( 'admin_enqueue_scripts', array( $this, 'set_css' ), 10 );
 
-		add_action( 'admin_enqueue_scripts', array( $this, 'set_js' ), 10 );
+		//add_action( 'admin_enqueue_scripts', array( $this, 'set_js' ), 10 );
 
 		add_action( 'wp_head', array( $this, 'set_front_css' ), 1 );
 
@@ -228,8 +243,6 @@ class ARPlite_PricingTable {
 
 		add_action( 'user_register', array( $this, 'arp_add_capabilities_to_new_user' ) );
 
-		add_action( 'enqueue_block_editor_assets', array( $this, 'arplite_gutenberg_capability' ) );
-
 		add_action( 'set_user_role', array( $this, 'arp_add_capabilities_to_user_role' ), 10, 3 );
 
 		add_filter( 'safe_style_css', array( $this, 'arp_allow_style_attr' ) );
@@ -238,11 +251,12 @@ class ARPlite_PricingTable {
 
 		add_action( 'arplite_add_tour_guide_js', array( $this, 'arplite_add_tour_guide_js' ) );
 
-		add_action( 'arplite_enqueue_internal_style', array( $this, 'arplite_enqueue_inline_editor_css' ) );
+		//add_action( 'arplite_enqueue_internal_style', array( $this, 'arplite_enqueue_inline_editor_css' ) );
 
 		add_action( 'admin_init', array( $this, 'arplite_invalid_template_redirection' ) );
+		
 
-		add_action( 'admin_init', array( $this, 'arplite_redirect_with_nonce_url' ) );
+		//add_action( 'admin_init', array( $this, 'arplite_redirect_with_nonce_url' ) );
 
 		if ( is_plugin_active( 'elementor/elementor.php' ) ) {
 			add_action( 'elementor/editor/before_enqueue_scripts', array( $this, 'arplite_enqueue_elementor_css' ) );
@@ -282,11 +296,11 @@ class ARPlite_PricingTable {
 
 	function arplite_login_footer() {
 
-		$arplite_script         = 'if( typeof window.parent.adminpage != "undefined" && window.parent.adminpage == "toplevel_page_arpricelite" ){';
+		$arplite_script         = 'if( typeof window.parent.adminpage != "undefined" && window.parent.adminpage == "toplevel_page_arprice" ){';
 			$arplite_script     .= 'if( document.getElementById("loginform") == null && window.parent.arplite_regenerate_nonce != null ){';
 				$arplite_script .= ' window.parent.arplite_regenerate_nonce(); ';
 			$arplite_script     .= '}';
-		$arplite_script         .= '} else if( window.opener != null && typeof window.opener.adminpage != "undefined" && window.opener.adminpage == "toplevel_page_arpricelite"){';
+		$arplite_script         .= '} else if( window.opener != null && typeof window.opener.adminpage != "undefined" && window.opener.adminpage == "toplevel_page_arprice"){';
 			$arplite_script     .= 'if( document.getElementById("loginform") == null && window.opener != null && window.opener.arplite_regenerate_nonce != null ){';
 				$arplite_script .= ' window.opener.arplite_regenerate_nonce( true ); ';
 				$arplite_script .= ' window.close() ';
@@ -301,7 +315,7 @@ class ARPlite_PricingTable {
 	}
 
 	function arplite_regenerate_nonce() {
-		echo json_encode(
+		echo wp_json_encode(
 			array(
 				'arplite_page_nonce' => wp_create_nonce( 'arplite_page_nonce' ),
 				'_wpnonce_arplite'   => wp_create_nonce( 'arplite_wp_nonce' ),
@@ -322,7 +336,7 @@ class ARPlite_PricingTable {
 
 		$schedules['every_twelve_hours'] = array(
 			'interval' => 43200,
-			'display'  => __( 'Every 12 hours', 'arprice-responsive-pricing-table' ),
+			'display'  => esc_html__( 'Every 12 hours', 'arprice-responsive-pricing-table' ),
 		);
 
 		return $schedules;
@@ -330,7 +344,7 @@ class ARPlite_PricingTable {
 
 	function arplite_display_sale_popup() {
 
-		if ( ! empty( $_GET['page'] ) && 'arpricelite' == $_GET['page'] && empty( $_GET['arp_action'] ) ) {
+		if ( ! empty( $_GET['page'] ) && 'arprice' == $_GET['page'] && empty( $_GET['arp_action'] ) ) {
 			if ( current_time( 'timestamp' ) < strtotime( '2020-12-06' ) ) {
 				if ( ! wp_next_scheduled( 'arplite_display_sale_upgrade_popup' ) ) {
 					wp_schedule_event( time(), 'every_twelve_hours', 'arplite_display_sale_upgrade_popup' );
@@ -364,6 +378,16 @@ class ARPlite_PricingTable {
 		wp_register_script( 'arplite-admin-notice-script', ARPLITE_PRICINGTABLE_URL . '/js/arplite-admin-notice.js', array(), $arpricelite_version, false );
 
 		wp_enqueue_script( 'arplite-admin-notice-script' );
+
+		wp_localize_script(
+			'arplite-admin-notice-script',
+			'arplite_admin_notice_script_obj',
+			array(
+				'install_bookingpress_url' => wp_nonce_url( self_admin_url( 'update.php?action=install-plugin&plugin=bookingpress-appointment-booking' ), 'install-plugin_bookingpress-appointment-booking' ),
+				'install_armember_url'=>wp_nonce_url( self_admin_url( 'update.php?action=install-plugin&plugin=armember-membership' ), 'install-plugin_armember-membership' ),
+				'install_arforms_url' =>wp_nonce_url( self_admin_url( 'update.php?action=install-plugin&plugin=arforms-form-builder' ), 'install-plugin_arforms-form-builder' ),
+			)
+		);
 	}
 
 	function arplite_display_ratenow_popup_callback() {
@@ -403,7 +427,7 @@ class ARPlite_PricingTable {
 				$news = array();
 			}
 
-			set_transient( 'arplite_news', json_encode( $news ), DAY_IN_SECONDS );
+			set_transient( 'arplite_news', wp_json_encode( $news ), DAY_IN_SECONDS );
 		} else {
 			$news = json_decode( $arplite_news, true );
 		}
@@ -461,10 +485,10 @@ class ARPlite_PricingTable {
 
 		if ( is_admin() ) {
 
-			if ( isset( $_GET['page'] ) && 'arpricelite' == $_GET['page'] ) {
+			if ( isset( $_GET['page'] ) && 'arprice' == $_GET['page'] ) {
 
 				if ( ! isset( $_GET['arplite_page_nonce'] ) ) {
-					$url = admin_url( 'admin.php?page=arpricelite&arplite_page_nonce=' . wp_create_nonce( 'arplite_page_nonce' ) );
+					$url = admin_url( 'admin.php?page=arprice&arplite_page_nonce=' . wp_create_nonce( 'arplite_page_nonce' ) );
 					if ( isset( $_GET['arp_action'] ) || isset( $_GET['arpricelite_show_deal'] ) ) {
 						$query_args = '';
 						unset( $_GET['page'] );
@@ -514,15 +538,18 @@ class ARPlite_PricingTable {
 	}
 
 	function arplite_invalid_template_redirection() {
-		global $wpdb;
+		global $wpdb, $arpricemain;
 
-		if ( isset( $_GET['page'] ) && 'arpricelite' == $_GET['page'] && isset( $_GET['arp_action'] ) && ( 'edit' == $_GET['arp_action'] || 'new' == $_GET['arp_action'] ) && isset( $_GET['eid'] ) && '' != $_GET['eid'] ) {
+		if( $arpricemain->arprice_is_pro_active() ){
+			return;
+		}
+		if ( isset( $_GET['page'] ) && 'arprice' == $_GET['page'] && isset( $_GET['arp_action'] ) && ( 'edit' == $_GET['arp_action'] || 'new' == $_GET['arp_action'] ) && isset( $_GET['eid'] ) && '' != $_GET['eid'] ) {
 			$id = isset( $_GET['eid'] ) ? sanitize_text_field( $_GET['eid'] ) : 0;
 
 			$check_table = $wpdb->get_row( $wpdb->prepare( 'SELECT id FROM ' . $wpdb->prefix . 'arplite_arprice WHERE ID=%d', $id ) );
 
 			if ( ! $check_table ) {
-				wp_redirect( admin_url( 'admin.php?page=arpricelite' ) );
+				wp_redirect( admin_url( 'admin.php?page=arprice' ) );
 				die;
 			}
 
@@ -533,7 +560,7 @@ class ARPlite_PricingTable {
 			$template_name = $sql[0]->template_name;
 			$arpreference  = isset( $_GET['ref'] ) ? sanitize_text_field( $_GET['ref'] ) : '';
 			if ( ( $is_template == 1 && $arpreference == '' && $id != $arpreference && sanitize_text_field( $_GET['arp_action'] ) !== 'new' ) || $status == 'draft' ) {
-				wp_redirect( admin_url( 'admin.php?page=arpricelite' ) );
+				wp_redirect( admin_url( 'admin.php?page=arprice' ) );
 				die;
 			}
 		}
@@ -1633,6 +1660,9 @@ class ARPlite_PricingTable {
 
 	function set_css() {
 		global $arpricelite_version,$pagenow;
+		// wp_register_style( 'arplite_front_css', ARPLITE_PRICINGTABLE_URL . '/css/arprice_front.css', array(), $arpricelite_version );
+		wp_register_style('arplite_admin_rtl_css', ARPLITE_PRICINGTABLE_URL . '/css/arprice_admin_rtl.css', array(), $arpricelite_version);
+
 		wp_register_style( 'arplite_admin_css', ARPLITE_PRICINGTABLE_URL . '/css/arprice_admin.css', array(), $arpricelite_version );
 
 		wp_register_style( 'fontawesome', ARPLITE_PRICINGTABLE_URL . '/css/font-awesome.css', array(), $arpricelite_version );
@@ -1653,28 +1683,39 @@ class ARPlite_PricingTable {
 
 		wp_register_style( 'arplite_cross_sellling', ARPLITE_PRICINGTABLE_URL .'/css/arplite_cross_selling.css', array(), $arpricelite_version );
 		
-		if ( isset( $_GET['page'] ) && ( $_GET['page'] == 'arpricelite' || $_GET['page'] == 'arplite_add_pricing_table' || $_GET['page'] == 'arp_analytics' || $_GET['page'] == 'arplite_import_export' || $_GET['page'] == 'arplite_global_settings' || $_GET['page'] == 'arplite_upgrade_to_premium' || $_GET['page'] == 'arplite_growth_tools' || $_GET['page'] == 'arplite_ab_testing' ) ) {
+		if ( isset( $_GET['page'] ) && ( $_GET['page'] == 'arprice' || $_GET['page'] == 'arplite_add_pricing_table' || $_GET['page'] == 'arp_analytics' || $_GET['page'] == 'arprice_import_export' || $_GET['page'] == 'arplite_global_settings' || $_GET['page'] == 'arplite_upgrade_to_premium' || $_GET['page'] == 'arplite_growth_tools' || $_GET['page'] == 'arplite_ab_testing' ) ) {
 			if ( version_compare( $GLOBALS['wp_version'], '3.7', '>' ) ) {
+				
+				if(is_rtl()){
+                    wp_enqueue_style('arplite_admin_rtl_css_3.8', ARPLITE_PRICINGTABLE_URL . '/css/arprice_admin_rtl_3.8.css', array(), $arpricelite_version);
+                }
+				
 				wp_enqueue_style( 'arplite_admin_css_3.8' );
+				wp_enqueue_style( 'tipso' );
 			}
 
 			wp_enqueue_style( 'arplite_admin_css' );
 
 			do_action( 'arplite_enqueue_internal_style' );
-			if ( $_GET['page'] != 'arplite_global_settings' && $_GET['page'] != 'arplite_import_export' && $_GET['page'] != 'arplite_ab_testing' ) {
+			if ( $_GET['page'] != 'arplite_global_settings' && $_GET['page'] != 'arprice_import_export' && $_GET['page'] != 'arplite_ab_testing' ) {
 
 				wp_enqueue_style( 'fontawesome' );
 
 				wp_enqueue_style( 'bootstrap-tour-standalone' );
 			}
 
-			if ( isset( $_GET['page'] ) && $_GET['page'] == 'arpricelite' ) {
+			if ( isset( $_GET['page'] ) && $_GET['page'] == 'arprice' ) {
 				wp_enqueue_style( 'tipso' );
 			}
+			if(is_rtl()){
+                wp_enqueue_style('arplite_admin_rtl_css');
+            }
 		}
 
-		if( !empty( $_GET['page'] ) && 'arplite_growth_tools' ){
+		if( !empty( $_GET['page'] ) &&  $_GET['page'] == 'arplite_growth_tools' ){
 			wp_enqueue_style( 'arplite_cross_sellling' );
+			wp_enqueue_script( 'arplite_dashboard_js' );
+			wp_enqueue_script( 'tipso' );
 		}
 
 		if ( $pagenow == 'plugins.php' ) {
@@ -1700,11 +1741,14 @@ class ARPlite_PricingTable {
 
 	function arplite_front_assets( $force = false ) {
 
-		global $arpricelite_version, $arpricelite_assset_version;
+		global $arpricelite_version, $arpricelite_assset_version, $arpricemain;
+ 
+		$arp_load_js_css = $arpricemain->arprice_get_settings('arp_load_js_css','general_settings');
+        if( empty($arp_load_js_css) ){
+            $arp_load_js_css = get_option('arp_load_js_css');
+        }
 
-		$arp_load_js_css = get_option( 'arplite_load_js_css' );
-
-		if ( ( isset( $arp_load_js_css ) && $arp_load_js_css == 'arplite_load_js_css' ) || true === $force ) {
+		if ( ( isset( $arp_load_js_css ) && $arp_load_js_css == 'arp_load_js_css' ) || true === $force ) {
 
 			$arp_enqueue_func        = 'wp_enqueue_style';
 			$arp_enqueue_func_script = 'wp_enqueue_script';
@@ -1719,8 +1763,9 @@ class ARPlite_PricingTable {
 			wp_register_style( 'arplite_front_css', ARPLITE_PRICINGTABLE_URL . '/css/arprice_front.css', array(), $arpricelite_assset_version );
 			$arp_enqueue_func( 'arplite_front_css' );
 
-			$is_enable_font_awesome = get_option( 'enable_font_loading_icon' );
-			if ( in_array( 'enable_fontawesome_icon', $is_enable_font_awesome ) ) {
+			$is_enable_font_awesome = $arpricemain->arprice_get_settings('enable_font_loading_icon','general_settings');
+			 
+			if ( $is_enable_font_awesome == '1') {
 				$arp_enqueue_func( 'fontawesome' );
 			}
 			$arp_enqueue_func( 'arplite_font_css_front' );
@@ -1852,13 +1897,14 @@ class ARPlite_PricingTable {
 		}
 	}
 
-	function arplite_front_inline_css_callback( $template_id, $tbl_preview = 0, $print_styles = false, $arplite_elementor = false ) {
-
+	function arplite_front_inline_css_callback( $template_id, $tbl_preview = 0, $print_styles = false, $arplite_elementor = false, $is_gutenberg = false) {
+		
 		if ( '' != $template_id ) {
 
 			global $wpdb, $arpricelite_form, $arpricelite_default_settings, $arplite_mainoptionsarr;
 			if ( empty( $arplite_mainoptionsarr ) ) {
 				$arplite_mainoptionsarr = $this->arp_mainoptions();
+ 
 			}
 			$arplite_front_inline_css = '';
 
@@ -2050,12 +2096,20 @@ class ARPlite_PricingTable {
 				
 				wp_add_inline_style( 'arplitetemplate_' . $template_id . '_css', $arplite_front_inline_css );
 			}
+		
+			if($is_gutenberg){
 
+				$arplite_gutenberg_css="";
+				$arplite_gutenberg_css ="<style id='arplite_gutenberg_css'>" .$arplite_front_inline_css. "</style>"; //phpcs:ignore
+				return $arplite_gutenberg_css;
+			}
+			
 			if( $arplite_elementor ){
 				echo "<style id='arplite_'".$template_id."_css>" .$arplite_front_inline_css. "</style>"; //phpcs:ignore
 			}
+			 
 		}
-
+		return $arplite_front_inline_css;
 	}
 
 	/** Setting Front Side JavaScript */
@@ -2081,23 +2135,23 @@ class ARPlite_PricingTable {
 		global $arpricelite_version, $pagenow;
 
 		$arp_current_date = current_time('timestamp', true );
-		$arp_sale_start_time = '1700483400';
-		$arp_sale_end_time = '1701541800';
+		$arp_sale_start_time = '1732064400';
+		$arp_sale_end_time = '1733270399';
 
 		wp_register_style( 'arplite_menu_css', ARPLITE_PRICINGTABLE_URL .'/css/arplite_menu.css', array(), $arpricelite_version );
 		wp_enqueue_style( 'arplite_menu_css' );
 
-		if( $arp_current_date >= $arp_sale_start_time && $arp_current_date <= $arp_sale_end_time ){
-			$stylesheet = '#adminmenu #toplevel_page_arpricelite .wp-submenu li:last-child a {
-				color:red !important;
-				background: transparent !important;
-				font-weight: bold;
-			}
-			#adminmenu #toplevel_page_arpricelite .wp-submenu li:last-child a:hover{
-				color : red !important;
-			}';
-			wp_add_inline_style( 'arplite_menu_css', $stylesheet );
-		}
+		// if( $arp_current_date >= $arp_sale_start_time && $arp_current_date <= $arp_sale_end_time ){
+		// 	$stylesheet = '#adminmenu #toplevel_page_arprice .wp-submenu li:last-child a {
+		// 		color:red !important;
+		// 		background: transparent !important;
+		// 		font-weight: bold;
+		// 	}
+		// 	#adminmenu #toplevel_page_arprice .wp-submenu li:last-child a:hover{
+		// 		color : red !important;
+		// 	}';
+		// 	wp_add_inline_style( 'arplite_menu_css', $stylesheet );
+		// }
 
 		if ( $pagenow == 'edit.php' || $pagenow == 'post.php' || $pagenow == 'post-new.php' ) {
 			return;
@@ -2122,23 +2176,24 @@ class ARPlite_PricingTable {
 
 		wp_register_script( 'arplite_dashboard_js', ARPLITE_PRICINGTABLE_URL . '/js/arprice_dashboard.js', array(), $arpricelite_version );
 
-		if ( isset( $_GET['page'] ) && ( $_GET['page'] == 'arpricelite' || $_GET['page'] == 'arplite_add_pricing_table' || $_GET['page'] == 'arplite_analytics' || $_GET['page'] == 'arplite_import_export' || $_GET['page'] == 'arplite_global_settings' || $_GET['page'] == 'arplite_ab_testing' ) && ( $pagenow !== 'edit.php' && $pagenow !== 'post.php' && $pagenow !== 'post-new.php' ) ) {
+		if ( isset( $_GET['page'] ) && ( $_GET['page'] == 'arprice' || $_GET['page'] == 'arplite_add_pricing_table' || $_GET['page'] == 'arplite_analytics' || $_GET['page'] == 'arprice_import_export' || $_GET['page'] == 'arplite_global_settings' || $_GET['page'] == 'arplite_ab_testing' ) && ( $pagenow !== 'edit.php' && $pagenow !== 'post.php' && $pagenow !== 'post-new.php' ) ) {
 
 			wp_register_script( 'jscolor', ARPLITE_PRICINGTABLE_URL . '/js/jscolor.js', array(), $arpricelite_version );
 			wp_enqueue_script( 'jquery' );
 
-			if ( $_GET['page'] == 'arpricelite' ) {
+			if ( $_GET['page'] == 'arprice' ) {
 				wp_enqueue_script( 'bootstrap-tour-standalone' );
 				wp_enqueue_script( 'arplite_tour_guide' );
+				wp_enqueue_script( 'arplite_dashboard_js' );
 				do_action( 'arplite_add_tour_guide_js' );
 			}
 
-			if ( $_GET['page'] != 'arplite_import_export' ) {
+			if ( $_GET['page'] != 'arprice_import_export' ) {
 				wp_enqueue_script( 'bpopup' );
 			}
 
-			if ( isset( $_GET['page'] ) && ( $_GET['page'] == 'arpricelite' || $_GET['page'] == 'arplite_global_settings' || $_GET['page'] == 'arplite_ab_testing' || $_GET['page'] == 'arplite_import_export' ) ) {
-				if ( $_GET['page'] == 'arpricelite' && isset( $_GET['arp_action'] ) ) {
+			if ( isset( $_GET['page'] ) && ( $_GET['page'] == 'arprice' || $_GET['page'] == 'arplite_global_settings' || $_GET['page'] == 'arplite_ab_testing' || $_GET['page'] == 'arprice_import_export' ) ) {
+				if ( $_GET['page'] == 'arprice' && isset( $_GET['arp_action'] ) ) {
 					wp_enqueue_script( 'arplite_js' );
 					wp_enqueue_script( 'arplite_sortable_resizable_js' );
 					wp_enqueue_script( 'arplite_editor_js' );
@@ -2164,9 +2219,9 @@ class ARPlite_PricingTable {
 					wp_enqueue_script( 'arplite_tour_guide' );
 				}
 
-				if ( ( $_GET['page'] == 'arpricelite' && ! isset( $_GET['arp_action'] ) ) || $_GET['page'] == 'arplite_global_settings' || $_GET['page'] == 'arplite_import_export' || $_GET['page'] == 'arplite_ab_testing' ) {
+				if ( ( $_GET['page'] == 'arprice' && ! isset( $_GET['arp_action'] ) ) || $_GET['page'] == 'arplite_global_settings' || $_GET['page'] == 'arprice_import_export' || $_GET['page'] == 'arplite_ab_testing' ) {
 					wp_enqueue_script( 'arplite_dashboard_js' );
-					if ( $_GET['page'] == 'arpricelite' && isset( $_GET['arp_action'] ) && $_GET['arp_action'] == '' ) {
+					if ( $_GET['page'] == 'arprice' && isset( $_GET['arp_action'] ) && $_GET['arp_action'] == '' ) {
 						wp_enqueue_script( 'bootstrap-tour-standalone' );
 						wp_enqueue_script( 'arplite_tour_guide' );
 					}
@@ -2212,7 +2267,7 @@ class ARPlite_PricingTable {
 		$handler = 'arplite_admin_css';
 		$data    = '';
 
-		if ( isset( $_GET['page'] ) && 'arpricelite' == $_GET['page'] && isset( $_GET['arp_action'] ) && '' != $_GET['arp_action'] ) {
+		if ( isset( $_GET['page'] ) && 'arprice' == $_GET['page'] && isset( $_GET['arp_action'] ) && '' != $_GET['arp_action'] ) {
 
 			$basic_colors = $arplite_mainoptionsarr['general_options']['arp_basic_colors'];
 			foreach ( $basic_colors as $key => $colors ) {
@@ -2248,12 +2303,12 @@ class ARPlite_PricingTable {
 				wp_enqueue_style( 'arplite-editor-google-fonts' . $key, $google_font_url, array(), $arpricelite_version );
 
 			}
-		} elseif ( isset( $_GET['page'] ) && 'arpricelite' == $_GET['page'] ) {
+		} elseif ( isset( $_GET['page'] ) && 'arprice' == $_GET['page'] ) {
 
 			$arplite_editor_data = '@import url(https://fonts.googleapis.com/css?family=Ubuntu:400,500,700);';
 			wp_add_inline_style( $handler, $arplite_editor_data );
 
-		} elseif ( isset( $_GET['page'] ) && 'arplite_import_export' == $_GET['page'] ) {
+		} elseif ( isset( $_GET['page'] ) && 'arprice_import_export' == $_GET['page'] ) {
 			if ( is_ssl() ) {
 				$google_font_url = 'https://fonts.googleapis.com/css?family=Ubuntu:400,500,700|Open+Sans';
 			} else {
@@ -2267,7 +2322,7 @@ class ARPlite_PricingTable {
 				$google_font_url = 'http://fonts.googleapis.com/css?family=Ubuntu:400,500,700|Open+Sans';
 			}
 			$data .= '@import url(' . $google_font_url . ');#wpcontent,#wpfooter{background:#fff}';
-		} elseif ( isset( $_GET['page'] ) && 'arplite_global_settings' == $_GET['page'] ) {
+		} elseif ( isset( $_GET['page'] ) && 'arprice_settings' == $_GET['page'] ) {
 			if ( is_ssl() ) {
 				$google_font_url = 'https://fonts.googleapis.com/css?family=Ubuntu:400,500,700|Open+Sans';
 			} else {
@@ -2638,105 +2693,8 @@ class ARPlite_PricingTable {
 		return $cap;
 	}
 
-	// Adding Pricing Table Menu.
-	function pricingtablelite_menu() {
-		global $arplite_pricingtable;
-
-		$place = $arplite_pricingtable->get_free_menu_position( 26.1, .1 );
-
-		// add custom role to these menu links.
-
-		add_menu_page( 'ARPricelite', 'ARPrice Lite', 'arplite_view_pricingtables', 'arpricelite', array( $this, 'route' ), ARPLITE_PRICINGTABLE_IMAGES_URL . '/pricing_table_icon.png', $place );
-
-		add_submenu_page( 'arpricelite', esc_html__( 'Import/Export', 'arprice-responsive-pricing-table' ), esc_html__( 'Import/Export', 'arprice-responsive-pricing-table' ), 'arplite_import_export_pricingtables', 'arplite_import_export', array( $this, 'route' ) );
-
-		add_submenu_page( 'arpricelite', esc_html__( 'A/B Testing', 'arprice-responsive-pricing-table' ), esc_html__( 'A/B Testing', 'arprice-responsive-pricing-table' ), 'arplite_ab_testing_pricingtables', 'arplite_ab_testing', array( $this, 'route' ) );
-
-		add_submenu_page( 'arpricelite', esc_html__( 'Settings', 'arprice-responsive-pricing-table' ), esc_html__( 'Settings', 'arprice-responsive-pricing-table' ), 'arplite_global_settings_pricingtables', 'arplite_global_settings', array( $this, 'route' ) );
-
-		add_submenu_page( 'arpricelite', esc_html__( 'Growth Plugins', 'arprice-responsive-pricing-table' ), esc_html__( 'Growth Plugins', 'arprice-responsive-pricing-table' ), 'arplite_view_pricingtables', 'arplite_growth_tools', array( $this, 'route' ) );
-		$this->set_premium_link();
-	}
-
-	function set_premium_link() {
-
-		if ( file_exists( ARPLITE_PRICINGTABLE_VIEWS_DIR . '/arprice_upgrade_to_premium.php' ) ) {
-			include ARPLITE_PRICINGTABLE_VIEWS_DIR . '/arprice_upgrade_to_premium.php';
-		}
-	}
-
-	function route() {
-		global $arplite_pricingtable, $arpricelite_form;
-		if ( isset( $_GET['page'] ) && $_GET['page'] == 'arpricelite' && isset( $_GET['arp_action'] ) && $_GET['arp_action'] == '' ) {
-			$arplite_pricingtable->addnew();
-		} elseif ( isset( $_GET['page'] ) && $_GET['page'] == 'arplite_add_pricing_table' ) {
-			if ( isset( $_GET['arpaction'] ) && $_GET['arpaction'] == 'create_new' ) {
-				$arpricelite_form->edit_template();
-			} else {
-				$arplite_pricingtable->addnew();
-			}
-		} elseif ( isset( $_GET['page'] ) && $_GET['page'] == 'arplite_analytics' ) {
-			$arplite_pricingtable->analytics();
-		} elseif ( isset( $_GET['page'] ) && $_GET['page'] == 'arplite_import_export' ) {
-			$arplite_pricingtable->import_export();
-		} elseif ( isset( $_GET['page'] ) && $_GET['page'] == 'arplite_global_settings' ) {
-			$arplite_pricingtable->load_global_settings();
-		} elseif ( isset( $_GET['page'] ) && $_GET['page'] == 'arplite_ab_testing' ) {
-			$arplite_pricingtable->load_abtesting_settings();
-		} elseif ( isset( $_GET['page'] ) && $_GET['page'] == 'arplite_upgrade_to_premium' ) {
-			$arplite_pricingtable->arplite_upgrade_to_premium();
-		} elseif( isset( $_GET['page'] ) && $_GET['page'] == 'arplite_growth_tools' ) {
-			$arplite_pricingtable->arplite_growth_tools();
-		}
-		
-		elseif ( isset( $_GET['page'] ) && $_GET['page'] == 'arpricelite' && isset( $_GET['arp_action'] ) && $_GET['arp_action'] != '' ) {
-			$arplite_pricingtable->pricing_table_content();
-		} else {
-			$arplite_pricingtable->addnew();
-		}
-	}
 
 
-	function arplite_growth_tools() {
-		if ( file_exists( ARPLITE_PRICINGTABLE_VIEWS_DIR . '/arplite_growth_tools.php' ) ) {
-			include ARPLITE_PRICINGTABLE_VIEWS_DIR . '/arplite_growth_tools.php';
-		}
-	}
-	function arplite_upgrade_to_premium() {
-		if ( file_exists( ARPLITE_PRICINGTABLE_VIEWS_DIR . '/arprice_upgrade_to_premium.php' ) ) {
-			include ARPLITE_PRICINGTABLE_VIEWS_DIR . '/arprice_upgrade_to_premium.php';
-		}
-	}
-
-	function addnew() {
-		if ( file_exists( ARPLITE_PRICINGTABLE_VIEWS_DIR . '/arprice_template_listing_2.0.php' ) ) {
-			include ARPLITE_PRICINGTABLE_VIEWS_DIR . '/arprice_template_listing_2.0.php';
-		}
-	}
-
-	function pricing_table_content() {
-		if ( file_exists( ARPLITE_PRICINGTABLE_VIEWS_DIR . '/arprice_listing_editor.php' ) ) {
-			include ARPLITE_PRICINGTABLE_VIEWS_DIR . '/arprice_listing_editor.php';
-		}
-	}
-
-	function import_export() {
-		if ( file_exists( ARPLITE_PRICINGTABLE_VIEWS_DIR . '/arprice_import_export.php' ) ) {
-			include ARPLITE_PRICINGTABLE_VIEWS_DIR . '/arprice_import_export.php';
-		}
-	}
-
-	function load_global_settings() {
-		if ( file_exists( ARPLITE_PRICINGTABLE_VIEWS_DIR . '/arprice_global_settings.php' ) ) {
-			include ARPLITE_PRICINGTABLE_VIEWS_DIR . '/arprice_global_settings.php';
-		}
-	}
-
-	function load_abtesting_settings() {
-		if ( file_exists( ARPLITE_PRICINGTABLE_VIEWS_DIR . '/arprice_ab_testing.php' ) ) {
-			include ARPLITE_PRICINGTABLE_VIEWS_DIR . '/arprice_ab_testing.php';
-		}
-	}
 
 	public static function arplite_db_check() {
 		global $arplite_pricingtable;
@@ -2749,7 +2707,7 @@ class ARPlite_PricingTable {
 
 	public static function arpricelite_install() {
 
-		global $arplite_pricingtable;
+		global $arplite_pricingtable, $arpricemain;
 
 		$arpricelite_version = get_option( 'arpricelite_version' );
 
@@ -2827,13 +2785,59 @@ class ARPlite_PricingTable {
             ){$charset_collate}";
 			dbDelta( $sqltable );
 
+			$arprice_settings_tbl = $wpdb->prefix . 'arprice_settings';
+
+			$sqltable_settings = "CREATE TABLE IF NOT EXISTS `{$arprice_settings_tbl}`(
+				`setting_id` int(11) NOT NULL AUTO_INCREMENT,
+				`setting_name` varchar(255) NOT NULL,
+				`setting_value` TEXT DEFAULT NULL,
+				`setting_type` varchar(255) DEFAULT NULL,
+				`created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+				PRIMARY KEY (`setting_id`)
+			) {$charset_collate}";
+			dbDelta( $sqltable_settings );
+
 			$arplite_pricingtable->arp_pricing_table_templates();
 
 			$wpdb->query( "ALTER TABLE `".$table."` AUTO_INCREMENT = 100" ); //phpcs:ignore
 
 			$wpdb->query( "ALTER TABLE `".$table_opt."` AUTO_INCREMENT = 100" ); //phpcs:ignore
 
-			$arplite_pricingtable->arp_set_global_settings();
+			//$arplite_pricingtable->arp_set_global_settings();
+			if( !$arpricemain->arprice_is_pro_active() ){
+
+				$arprice_settings = arprice_pricing_table::arplite_default_options();
+				
+				foreach( $arprice_settings as $setting_key=>$setting_val ){
+
+					global $tbl_arf_settings, $wpdb;
+
+					if( is_array( $setting_val ) ){
+						$setting_val = wp_json_encode( $setting_val );
+					}
+
+					$res = $wpdb->query( $wpdb->prepare('insert into '. $arprice_settings_tbl. '(setting_name, setting_value, setting_type) values (%s, %s, %s)', $setting_key, $setting_val, 'general_settings')); //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Reason: $tbl_arf_settings is table name defined globally. False Positive alarm
+				}
+			} else {
+
+				$arprice_settings = $arpricemain->arplite_default_options();
+				$arprice_pro_default_opts = arprice_global_pro_settings::arprice_fetch_pro_default_options();
+
+				if( !empty( $arprice_pro_default_opts ) ){
+                    $arprice_settings = array_merge( $arprice_settings, $arprice_pro_default_opts );
+                }
+				
+				foreach( $arprice_settings as $setting_key=>$setting_val ){
+
+					global $tbl_arf_settings, $wpdb;
+
+					if( is_array( $setting_val ) ){
+						$setting_val = wp_json_encode( $setting_val );
+					}
+					
+					$res = $wpdb->query( $wpdb->prepare('insert into '. $arprice_settings_tbl. '(setting_name, setting_value, setting_type) values (%s, %s, %s)', $setting_key, $setting_val, 'general_settings')); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Reason: $tbl_arf_settings is table name defined globally. False Positive alarm
+				}
+			}
 
 			$nextEvent = strtotime( '+60 days' );
 
@@ -2892,9 +2896,12 @@ class ARPlite_PricingTable {
 					$table           = $wpdb->prefix . 'arplite_arprice';
 					$table_opt       = $wpdb->prefix . 'arplite_arprice_options';
 					$table_analytics = $wpdb->prefix . 'arplite_arprice_analytics';
+					$table_settings  = $wpdb->prefix . 'arprice_settings';
+
 					$wpdb->query( "DROP TABLE IF EXISTS ".$table ); //phpcs:ignore
 					$wpdb->query( "DROP TABLE IF EXISTS ".$table_opt ); //phpcs:ignore
 					$wpdb->query( "DROP TABLE IF EXISTS ".$table_analytics ); //phpcs:ignore
+					$wpdb->query( "DROP TABLE IF EXISTS ".$table_settings ); //phpcs:ignore
 				}
 				restore_current_blog();
 			}
@@ -2920,9 +2927,12 @@ class ARPlite_PricingTable {
 			$table           = $wpdb->prefix . 'arplite_arprice';
 			$table_opt       = $wpdb->prefix . 'arplite_arprice_options';
 			$table_analytics = $wpdb->prefix . 'arplite_arprice_analytics';
+			$table_settings  = $wpdb->prefix . 'arprice_settings';
+			
 			$wpdb->query( "DROP TABLE IF EXISTS ".$table ); //phpcs:ignore
 			$wpdb->query( "DROP TABLE IF EXISTS ".$table_opt ); //phpcs:ignore
 			$wpdb->query( "DROP TABLE IF EXISTS ".$table_analytics ); //phpcs:ignore
+			$wpdb->query( "DROP TABLE IF EXISTS ".$table_settings ); //phpcs:ignore
 		}
 	}
 
@@ -2962,11 +2972,12 @@ class ARPlite_PricingTable {
 	}
 
 	function footer_js( $location = 'footer' ) {
-		global $arplite_is_animation, $arplite_has_tooltip, $arplite_has_fontawesome, $arplite_effect_css, $arplite_switch_css,$arpricelite_version;
+		global $arplite_is_animation, $arplite_has_tooltip, $arplite_has_fontawesome, $arplite_effect_css, $arplite_switch_css,$arpricelite_version, $arpricemain;
 		if ( $arplite_has_fontawesome == 1 ) {
-			$is_enable_font_awesome = get_option( 'enable_font_loading_icon' );
-
-			if ( in_array( 'enable_fontawesome_icon', $is_enable_font_awesome ) ) {
+			
+			$is_enable_font_awesome = $arpricemain->arprice_get_settings('enable_font_loading_icon','general_settings');
+			 
+			if ( $is_enable_font_awesome == '1') {
 				wp_enqueue_style( 'fontawesome' );
 			}
 		}
@@ -2979,8 +2990,11 @@ class ARPlite_PricingTable {
 
 			$arp_preview_inline_style .= '@media screen and (min-width:' . ( $mobile_size + 1 ) . 'px) and (max-width:' . $tablet_size . 'px){ .arp_body_content { padding: 20px 15px 20px 15px; }}';
 
+			wp_enqueue_style( 'arplite_front_css' );
 			wp_add_inline_style( 'arplite_front_css', $arp_preview_inline_style );
 		}
+
+		
 	}
 
 	function arplite_enqueue_elementor_css() {
@@ -3381,6 +3395,8 @@ class ARPlite_PricingTable {
 			}
 		}
 
+		
+		 
 		$wpnonce = isset( $_REQUEST['_wpnonce_arplite'] ) ? sanitize_text_field( $_REQUEST['_wpnonce_arplite'] ) : '';
 		if ( $wpnonce == '' ) {
 			$wpnonce = isset( $_POST['_wpnonce_arplite'] ) ? sanitize_text_field( $_POST['_wpnonce_arplite'] ) : '';
@@ -3404,7 +3420,13 @@ class ARPlite_PricingTable {
 
 	function arplite_admin_editor_styles() {
 
-		if ( isset( $_REQUEST['page'] ) && 'arpricelite' == $_REQUEST['page'] && isset( $_GET['arp_action'] ) && isset( $_GET['eid'] ) && '' != $_GET['eid'] ) {
+		global $arpricemain;
+
+		if( $arpricemain->arprice_is_pro_active() ){
+			return;
+		}
+
+		if ( isset( $_REQUEST['page'] ) && 'arprice' == $_REQUEST['page'] && isset( $_GET['arp_action'] ) && isset( $_GET['eid'] ) && '' != $_GET['eid'] ) {
 			global $arpricelite_version, $wpdb, $arpricelite_img_css_version,$arpricelite_form,$arplite_mainoptionsarr;
 			$id            = intval( $_GET['eid'] );
 			$arplite_table = $wpdb->get_row( $wpdb->prepare( 'SELECT a.*, ao.table_options FROM `' . $wpdb->prefix . 'arplite_arprice` a LEFT JOIN `' . $wpdb->prefix . 'arplite_arprice_options` ao ON a.ID = ao.table_id WHERE a.ID = %d AND a.status = %s', $id, 'published' ) );
@@ -3436,6 +3458,13 @@ class ARPlite_PricingTable {
 			wp_enqueue_style( 'arplite_template_css-' . $id );
 
 			wp_enqueue_style( 'arplite_editor_front_css' );
+
+			wp_register_style( 'arplite_template_css-' . $id, $css_url, array(), $arpricelite_img_css_version );
+
+			wp_register_style( 'arplite_admin_css', ARPLITE_PRICINGTABLE_URL . '/css/arprice_admin.css', array(), $arpricelite_img_css_version );
+
+			wp_enqueue_style('arplite_admin_css');
+
 
 			$general_option = maybe_unserialize( $arplite_table->general_options );
 
@@ -3566,8 +3595,9 @@ class ARPlite_PricingTable {
 				}
 			}
 
-			wp_add_inline_style( 'arplite_admin_css', $template_css );
-
+			/** need to confirm reputelog */ 
+			 wp_add_inline_style( 'arplite_admin_css', $template_css );
+			
 		}
 
 	}
@@ -3926,9 +3956,9 @@ class ARPlite_PricingTable {
 		global $arplite_pricingtable;
 		$arplite_allowed_html = $arplite_pricingtable->arpricelite_allowed_html_tags();
 		if ( is_array( $posted_data ) ) {
-			return array_map( array( $arplite_pricingtable, __FUNCTION__ ), json_decode( json_encode( $posted_data ), true ) );
+			return array_map( array( $arplite_pricingtable, __FUNCTION__ ), json_decode( wp_json_encode( $posted_data ), true ) );
 		} elseif ( is_object( $posted_data ) ) {
-			return array_map( array( $arplite_pricingtable, __FUNCTION__ ), json_decode( json_encode( $posted_data ), true ) );
+			return array_map( array( $arplite_pricingtable, __FUNCTION__ ), json_decode( wp_json_encode( $posted_data ), true ) );
 		}
 		if ( preg_match( '/^(\d+)$/', $posted_data ) ) {
 			return intval( $posted_data );

@@ -9,13 +9,13 @@ function arp_upgrade_to_premium_menu() {
 	global $arplite_pricingtable;
 
 	$arp_current_date = current_time('timestamp', true );
-	$arp_sale_start_time = '1700483400';
-	$arp_sale_end_time = '1701541800';
+	$arp_sale_start_time = '1732064400';
+	$arp_sale_end_time = '1733270399';
 	
 	if( $arp_current_date >= $arp_sale_start_time && $arp_current_date <= $arp_sale_end_time ){
-		$page_hook = add_submenu_page( 'arpricelite', esc_html__( 'Black Friday Sale', 'arprice-responsive-pricing-table' ), esc_html__( 'Black Friday Sale', 'arprice-responsive-pricing-table' ), 'arplite_view_pricingtables', 'arpricelite&amp;arpricelite_show_deal=yes', 'arp_black_friday_deal' );
+		$page_hook = add_submenu_page( 'arprice', esc_html__( 'Black Friday Sale', 'arprice-responsive-pricing-table' ), esc_html__( 'Black Friday Sale', 'arprice-responsive-pricing-table' ), 'arplite_view_pricingtables', 'arprice&amp;arpricelite_show_deal=yes', 'arp_black_friday_deal' );
 	} else {
-		$page_hook = add_submenu_page( 'arpricelite', esc_html__( 'Upgrade to Premium', 'arprice-responsive-pricing-table' ), esc_html__( 'Upgrade to Premium', 'arprice-responsive-pricing-table' ), 'arplite_view_pricingtables', 'arplite_upgrade_to_premium', 'arp_upgrade_to_premium' );
+		$page_hook = add_submenu_page( 'arprice', esc_html__( 'Upgrade to Premium', 'arprice-responsive-pricing-table' ), esc_html__( 'Upgrade to Premium', 'arprice-responsive-pricing-table' ), 'arplite_view_pricingtables', 'arplite_upgrade_to_premium', 'arp_upgrade_to_premium' );
 	}
 	add_action( 'load-' . $page_hook, 'arp_upgrade_ob_start' );
 }

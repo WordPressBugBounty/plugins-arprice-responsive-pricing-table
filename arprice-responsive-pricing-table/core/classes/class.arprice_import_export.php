@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 class arpricelite_import_export {
 
 	function __construct() {
@@ -14,12 +16,13 @@ class arpricelite_import_export {
 	function arplite_export_pricing_tables() {
 
 		if ( is_admin() ) {
+			
+			if ( isset( $_POST['arplite_export_tables'] ) && ( $_REQUEST['page'] = 'arprice_import_export' || $_REQUEST['page'] = 'arprice' ) ) { //phpcs:ignore
 
-			if ( isset( $_POST['arplite_export_tables'] ) && ( $_REQUEST['page'] = 'arplite_import_export' || $_REQUEST['page'] = 'arpricelite' ) ) { //phpcs:ignore
-				global $wpdb, $arpricelite_import_export,$arplite_pricingtable;
-
+				global $wpdb, $arpricelite_import_export,$arplite_pricingtable, $arpricemain;
+				
 				$check_caps = $arplite_pricingtable->arplite_check_user_cap( 'arplite_import_export_pricingtables', true );
-
+				
 				if ( $check_caps != 'success' ) {
 					$check_cap_error = json_decode( $check_caps, true );
 					$error_msg       = $check_cap_error[0];
@@ -32,6 +35,17 @@ class arpricelite_import_export {
 					echo "<input type='hidden' id='arp_import_file_error' value='" . esc_html($import_error) . "' />";
 					return;
 				}
+
+				if( $arpricemain->arprice_is_pro_active() ){
+					
+					if( class_exists('arprice_pro_import_export') ){
+		
+						global $arprice_pro_import_export;
+						$arprice_pro_import_export->arp_pro_export_pricing_tables();
+					}
+				}
+
+
 
 				$arp_db_version = get_option( 'arpricelite_version' );
 
@@ -527,7 +541,7 @@ class arpricelite_import_export {
 								$new_path = $upload_dir_path . $image_name;
 								$new_url  = $upload_dir_url . $image_name;
 								if ( array_key_exists( $base_url, $_SESSION['arprice_image_array'] ) ) {
-									$new_url = $_SESSION['arprice_image_array'][ $base_url ];
+									$new_url = sanitize_text_field($_SESSION['arprice_image_array'][ $base_url ]);
 								} else {
 
 									$arpfileobj = new ARPLiteFileController( $base_url, true );
@@ -606,7 +620,7 @@ class arpricelite_import_export {
 				$destination = $upload_dir_path . 'template_images/' . $template_img_name;
 
 				$arpfileobj->arplite_process_upload( $destination );
-
+				
 				if ( false == $arpfileobj ) {
 					$arpfileobj = new ARPLiteFileController( ARPLITE_PRICINGTABLE_DIR . '/images/' . $arp_main_reference_template . '.png', true );
 
@@ -761,7 +775,7 @@ class arpricelite_import_export {
 				$new_url  = $upload_dir_url . $image_name;
 
 				if ( ! empty( $_SESSION['arprice_image_array'] ) && in_array( $base_url, $_SESSION['arprice_image_array'] ) ) {
-					$new_url   = esc_url_raw( $_SESSION['arprice_image_array'][ $base_url ] );
+					$new_url   = isset($_SESSION['arprice_image_array'][ $base_url ]) ? esc_url_raw( sanitize_text_field($_SESSION['arprice_image_array'][ $base_url ]) ) : '';
 					$nlinkpart = explode( '/', $new_url );
 					$nlastpart = end( $nlinkpart );
 					$new_path  = $upload_dir_path . $nlastpart;
@@ -873,5 +887,14 @@ class arpricelite_import_export {
 
 		return $convert_string;
 	}
+
+	function arprice_render_pro_settings( $setting_key ){
+        global $arpricemain;
+
+        if( class_exists( 'arprice_pro_import_export' ) && method_exists( 'arprice_pro_import_export', 'arprice_render_pro_import_export_ui' ) ){
+            arprice_pro_import_export::arprice_render_pro_import_export_ui( $setting_key );
+        }
+
+    }
 }
 ?>

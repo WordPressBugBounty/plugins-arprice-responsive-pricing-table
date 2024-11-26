@@ -1,4 +1,7 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 if ( ! function_exists( 'arp_get_pricing_table_string_editor' ) ) {
 
 	function arp_get_pricing_table_string_editor( $table_id, $pricetable_name = '', $is_tbl_preview = 0, $general_option = '', $opts = '', $is_clone = '' ) {
@@ -251,7 +254,7 @@ if ( ! function_exists( 'arp_get_pricing_table_string_editor' ) ) {
 
 		}
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped --Reason: $arp_table_data is properly escaped.
-		echo '<input type="hidden" id="arp_table_data" name="arp_table_data" value="' . htmlspecialchars( json_encode( $arp_table_data ) ) . '" />';
+		echo '<input type="hidden" id="arp_table_data" name="arp_table_data" value="' . htmlspecialchars( wp_json_encode( $arp_table_data ) ) . '" />';
 
 		$maxrowcount = 0;
 		if ( is_array( $table_cols ) ) {
@@ -380,7 +383,7 @@ if ( ! function_exists( 'arp_get_pricing_table_string_editor' ) ) {
 
 						$tablestring .= '<div class="arp_editor_top_belt_btn arp_export_btn" id="export_table_options" style="' . $export_option_style . '"></div>';
 
-						$tablestring .= "<div class='arp_editor_top_belt_btn arp_cancel_btn' id='template_close_btn' onClick='javascript:location.href=\"admin.php?page=arpricelite\"'></div>";
+						$tablestring .= "<div class='arp_editor_top_belt_btn arp_cancel_btn' id='template_close_btn' onClick='javascript:location.href=\"admin.php?page=arprice\"'></div>";
 
 						$arp_template      = isset( $arp_template ) ? $arp_template : '';
 						$arp_template_skin = ( $arp_template_skin ) ? $arp_template_skin : '';
@@ -3017,8 +3020,8 @@ if ( ! function_exists( 'arp_get_pricing_table_string_editor' ) ) {
 
 									$skins = $arpricelite_default_settings->arp_change_default_template_skins( $default_skins, $postarr );
 
-									$data_skin  = json_encode( $skins[ $reference_template ]['skin'] );
-									$data_array = json_encode( $skins[ $reference_template ]['color'] );
+									$data_skin  = wp_json_encode( $skins[ $reference_template ]['skin'] );
+									$data_array = wp_json_encode( $skins[ $reference_template ]['color'] );
 
 									$skins_reference_template_colors = isset( $skins[ $reference_template ]['color'] ) ? $skins[ $reference_template ]['color'] : array();
 

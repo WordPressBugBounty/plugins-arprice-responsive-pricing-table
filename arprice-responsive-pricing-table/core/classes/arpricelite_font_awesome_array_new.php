@@ -1,4 +1,7 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 function arprice_font_awesome_font_array_new() {
 
 		$font_awesome_icon = array(

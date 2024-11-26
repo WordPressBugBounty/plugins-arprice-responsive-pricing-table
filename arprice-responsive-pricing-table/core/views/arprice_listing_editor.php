@@ -1,5 +1,6 @@
 <?php
-if ( ! defined( 'ABSPATH' ) || ! function_exists( 'current_user_can' ) || ! current_user_can( 'arplite_view_pricingtables' ) || ! isset( $_GET['arplite_page_nonce'] ) || ( isset( $_GET['arplite_page_nonce'] ) && ! wp_verify_nonce( sanitize_text_field( $_GET['arplite_page_nonce'] ), 'arplite_page_nonce' ) ) ) {
+if ( ! defined( 'ABSPATH' ) || ! function_exists( 'current_user_can' ) || ! current_user_can( 'arplite_view_pricingtables' ) || ! isset( $_GET['arprice_page_nonce'] ) || ( isset( $_GET['arprice_page_nonce'] ) && ! wp_verify_nonce( sanitize_text_field( $_GET['arprice_page_nonce'] ), 'arprice_page_nonce' ) ) ) {
+	
 	exit;
 }
 
@@ -60,7 +61,7 @@ global $arpricelite_version;
 <div class="main_box" >
 	<form name="price_table" id="price_table_form" method="post" onsubmit="return check_package_validation();">
 		<input type="hidden" name="ajaxurl" id="ajaxurl" value="<?php echo admin_url( 'admin-ajax.php' ); //phpcs:ignore ?>"  />
-		<input type="hidden" name="url" id="listing_url" value="admin.php?page=arpricelite" />
+		<input type="hidden" name="url" id="listing_url" value="admin.php?page=arprice" />
 		<input type="hidden" name="template_type_old" id="template_type_old" value="<?php echo esc_html( $id ); ?>" />
 		<input type="hidden" value="<?php echo esc_html( $id ); ?>" id="template_type_new" name="template_type_new">
 		<input type="hidden" name="pricing_table_img_url" id="pricing_table_img_url" value="<?php echo esc_url( ARPLITE_PRICINGTABLE_IMAGES_URL ); ?>" />
@@ -120,14 +121,14 @@ global $arpricelite_version;
 			<input type="hidden" name="arp_template_type" id="arp_template_type" value="<?php echo esc_html( $arp_template_type ); ?>" />
 			<input type="hidden" name="has_caption_column" id="has_caption_column" value="<?php echo esc_html( $caption_column ); ?>"  />
 			<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped --Reason: $template_feature is properly escaped or hardcoded ?>
-			<input type="hidden" name="template_feature" id="arp_template_feature" value='<?php echo stripslashes( json_encode( $template_feature ) ); ?>' />
+			<input type="hidden" name="template_feature" id="arp_template_feature" value='<?php echo stripslashes( wp_json_encode( $template_feature ) ); ?>' />
 			<?php
 				$column_order = str_replace( '"', '\'', $table_gen_opt['general_settings']['column_order'] );
 			?>
 			<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped --Reason: $column_order is properly escaped or hardcoded ?>
 			<input type="hidden" name="pricing_table_column_order" id="pricing_table_column_order" value="<?php echo $column_order; ?>" />
 			<input type="hidden" name="arp_reference_template" id="arp_reference_template" value="<?php echo esc_html( $reference_template ); ?>" />
-			<?php $user_edited_columns = ( $table_gen_opt['general_settings']['user_edited_columns'] == '' ) ? '' : stripslashes( json_encode( $table_gen_opt['general_settings']['user_edited_columns'] ) ); ?>
+			<?php $user_edited_columns = ( $table_gen_opt['general_settings']['user_edited_columns'] == '' ) ? '' : stripslashes( wp_json_encode( $table_gen_opt['general_settings']['user_edited_columns'] ) ); ?>
 			<input type="hidden" name="arp_user_edited_columns" id="arp_user_edited_columns" value='<?php echo esc_html( $user_edited_columns ); ?>' />
 			<?php
 		} else {
@@ -142,7 +143,7 @@ global $arpricelite_version;
 			<input type="hidden" name="arp_template_type" id="arp_template_type" value="<?php echo esc_html( $arp_template_type ); ?>" />
 			<input type="hidden" name="has_caption_column" id="has_caption_column" value="<?php echo esc_html( $has_caption ); ?>"  />
 			<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped --Reason: $template_feature is properly escaped or hardcoded ?>
-			<input type="hidden" name="template_feature" id="arp_template_feature" value='<?php echo stripslashes( json_encode( $template_feature ) ); ?>' />
+			<input type="hidden" name="template_feature" id="arp_template_feature" value='<?php echo stripslashes( wp_json_encode( $template_feature ) ); ?>' />
 			<input type="hidden" name="pricing_table_column_order" id="pricing_table_column_order" value="" />
 			<input type="hidden" name="arp_reference_template" id="arp_reference_template" value="" />
 			<input type="hidden" name="arp_user_edited_columns" id="arp_user_edited_columns" value="" />
@@ -266,7 +267,7 @@ global $arpricelite_version;
 
 <div style="clear:both;"></div>
 
-<div id="arp_fileupload_iframe" class="arp_modal_box" style="display:none; height:430px; width:800px;">
+<div id="arp_fileupload_iframe" class="arplite_modal_box" style="display:none; height:430px; width:800px;">
 	<div class="modal_top_belt">
 		<span class="modal_title"><?php esc_html_e( 'Choose File', 'arprice-responsive-pricing-table' ); ?></span>
 		<span class="modal_close_btn b-close"></span>
@@ -510,7 +511,7 @@ $header_options = isset( $arplite_coloptionsarr['header_options'] ) ? $arplite_c
 
 <input type="hidden" name="shortcode_to_insert" id="shortcode_to_insert" value="" />
 <div class="arp_admin_modal_overlay"></div>
-<div class="arp_modal_box arp_offset_container" id="new_template_modal">
+<div class="arplite_modal_box arp_offset_container" id="new_template_modal">
 	<div class="modal_top_belt">
 		<span class="modal_title"><?php esc_html_e( 'Add Shortcode', 'arprice-responsive-pricing-table' ); ?></span>
 		<span class="arp_modal_close_btn b-close"></span>
@@ -698,10 +699,15 @@ $header_options = isset( $arplite_coloptionsarr['header_options'] ) ? $arplite_c
 	$fonticon .= "<div class='arp_icon_search'><input class='arp_icon_search_input' id='arp_icon_search_input' name='arp_icon_search_input' placeholder='search' /></div>";
 	foreach ( $arprice_font_awesome_icons as $name => $icon ) {
 
+		global $arpricemain;
+
 		if ( $name == 'font_awesome' ) {
 			$fonticon              .= '<div class="arp_icon_text_title" id="arp_font_awaesome_icon">Font Awesome</span></div><div class="clear"></div>';
-			$is_enable_font_awesome = get_option( 'enable_font_loading_icon' );
-			if ( is_array( $is_enable_font_awesome ) && in_array( 'enable_fontawesome_icon', $is_enable_font_awesome ) ) {
+
+			$is_enable_font_awesome = $arpricemain->arprice_get_settings('enable_font_loading_icon','general_settings');
+			 
+			if ( $is_enable_font_awesome == '1') {
+
 				foreach ( $icon as $icon_name => $icon_class ) {
 
 					$ico_cls   = ( isset( $icon_class['code'] ) && $icon_class['code'] != '' ) ? $icon_class['code'] : '';

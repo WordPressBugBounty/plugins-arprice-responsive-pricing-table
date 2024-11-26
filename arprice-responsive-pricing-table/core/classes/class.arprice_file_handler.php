@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 class ARPLiteFilecontroller {
 
 	public $file;

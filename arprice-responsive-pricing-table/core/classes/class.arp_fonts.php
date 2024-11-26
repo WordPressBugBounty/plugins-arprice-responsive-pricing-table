@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 class arpricelite_fonts {
 
 	function google_fonts_list() {

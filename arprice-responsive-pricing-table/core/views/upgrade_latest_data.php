@@ -1109,7 +1109,117 @@ if ( version_compare( $checkupdate, '3.6', '<' ) ) {
 	include ARPLITE_PRICINGTABLE_CLASSES_DIR . '/class.arprice_default_templates.php';
 }
 
-$arplite_newdb_version = sanitize_text_field( '3.6.4' );
+if(version_compare( $checkupdate, '3.6.5', '<') ){
+
+	global $wpdb,$arpricemain;
+	// setting table --- 
+	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+	
+	$arprice_settings_tbl = $wpdb->prefix . 'arprice_settings';
+
+	$sqltable_settings = "CREATE TABLE IF NOT EXISTS `{$arprice_settings_tbl}`(
+		`setting_id` int(11) NOT NULL AUTO_INCREMENT,
+		`setting_name` varchar(255) NOT NULL,
+		`setting_value` TEXT DEFAULT NULL,
+		`setting_type` varchar(255) DEFAULT NULL,
+		`created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+		PRIMARY KEY (`setting_id`)
+	) {$charset_collate}";
+	dbDelta( $sqltable_settings );
+	
+	if(!$arpricemain->arprice_is_pro_active()){
+
+		$arp_mobile_responsive_size = !empty(get_option('arplite_mobile_responsive_size')) ? get_option('arplite_mobile_responsive_size') : 427;
+		$arp_tablet_responsive_size = !empty(get_option('arplite_tablet_responsive_size')) ? get_option('arplite_tablet_responsive_size') : 740;
+		$arp_desktop_responsive_size = !empty(get_option('arplite_desktop_responsive_size')) ? get_option('arplite_desktop_responsive_size') : 0;
+		$arp_load_js_css = !empty(get_option('arplite_load_js_css')) ? get_option('arplite_load_js_css') : '';
+		$arp_enable_font_loading_icon = !empty(get_option('enable_font_loading_icon')) ? get_option('enable_font_loading_icon') : '';
+		$arp_css_character_set = !empty(get_option('arplite_css_character_set')) ? get_option('arplite_css_character_set') : array();
+
+
+		if( !empty( $arp_enable_font_loading_icon) && is_serialized($arp_enable_font_loading_icon) ){
+
+			$arp_enable_font_loading_icon = maybe_unserialize( $arp_enable_font_loading_icon );
+
+			if ( is_array( $arp_enable_font_loading_icon ) && in_array( 'enable_fontawesome_icon', $arp_enable_font_loading_icon ) ) {
+
+				$arp_enable_font_loading_icon = '1';
+			}
+
+		}
+
+		$arp_default_settings = array(
+			'arp_mobile_responsive_size' => $arp_mobile_responsive_size,
+			'arp_tablet_responsive_size' => $arp_tablet_responsive_size,
+			'arp_desktop_responsive_size' => $arp_desktop_responsive_size,
+			'enable_fontawesome_icon' => $arp_enable_font_loading_icon,
+			'arp_css_character_set' => $arp_css_character_set,
+			'arp_load_js_css' => $arp_load_js_css,
+		);
+
+	} else {
+	
+		$arprice_mobile_responsize_size = !empty(get_option('arp_mobile_responsive_size')) ? get_option('arp_mobile_responsive_size') : 480;
+		$arprice_tablet_responsive_size = !empty(get_option('arp_tablet_responsive_size')) ? get_option('arp_tablet_responsive_size') : 768;
+		$arprice_desktop_responsive_size = !empty(get_option('arp_desktop_responsive_size')) ? get_option('arp_desktop_responsive_size') : 0;
+		$arprice_google_map_api = !empty(get_option('arp_google_map_api_key')) ? get_option('arp_google_map_api_key') : '';
+		$arprice_css_character_set = !empty(get_option('arp_css_character_set')) ? get_option('arp_css_character_set') : array();
+		$arprice_enable_ab_testing = !empty(get_option('arp_enable_ab_testing')) ? get_option('arp_enable_ab_testing') : '0';
+		$arprice_disable_font_loading_icon = !empty(get_option('disable_font_loading_icon')) ? get_option('disable_font_loading_icon') : array();
+		$arprice_load_js_css = !empty(get_option('arp_load_js_css')) ? get_option('arp_load_js_css') : '';
+		$arprice_enable_analytics = !empty(get_option('arp_enable_analytics')) ? get_option('arp_enable_analytics') : '0';
+		$arprice_enable_loader = !empty(get_option('arp_enable_loader')) ? get_option('arp_enable_loader') : '0';
+		$arprice_custom_css = !empty(get_option('arp_global_custom_css')) ? get_option('arp_global_custom_css') : '';
+
+		$arprice_enable_fontawesome_icon = '';
+		$arprice_enable_material_design_icon = '';
+		$arprice_enable_typicons = '';
+		$arprice_enable_ionicons = '';
+
+		if( !empty( $arprice_disable_font_loading_icon )){
+
+			$arprice_enable_fontawesome_icon = !in_array('enable_fontawesome_icon', $arprice_disable_font_loading_icon) ? 'enable_fontawesome_icon' : '';
+			$arprice_enable_material_design_icon = !in_array('enable_material_design_icon', $arprice_disable_font_loading_icon) ? 'enable_material_design_icon' : '';
+			$arprice_enable_typicons = !in_array('enable_typicons', $arprice_disable_font_loading_icon) ? 'enable_ionicons' : '';
+			$arprice_enable_ionicons = !in_array('enable_ionicons',$arprice_disable_font_loading_icon) ? 'enable_typicons' : '';
+		}
+		
+		$arp_default_settings = array(
+			'arp_mobile_responsive_size' => $arprice_mobile_responsize_size,
+			'arp_tablet_responsive_size' => $arprice_tablet_responsive_size,
+			'arp_desktop_responsive_size' => $arprice_desktop_responsive_size,
+			'enable_fontawesome_icon' => $arprice_enable_fontawesome_icon,
+			'arp_css_character_set' => $arprice_css_character_set,
+			'arp_load_js_css' => $arprice_load_js_css,
+			'arp_custom_css' => $arprice_custom_css,
+			'arp_enable_ab_testing' => $arprice_enable_ab_testing,
+			'google_map_api_key' => $arprice_google_map_api,
+			'arp_track_analytics' => $arprice_enable_analytics,
+			'arp_enable_loader' => $arprice_enable_loader,
+			'enable_material_design_icon' => $arprice_enable_material_design_icon,
+			'enable_ionicons' => $arprice_enable_typicons,
+			'enable_typicons' => $arprice_enable_ionicons,
+		);
+	}
+	
+	if( !empty( $arp_default_settings )){
+
+		foreach( $arp_default_settings as $option_name => $option_val ){
+			$opt_val = $option_val;
+
+			$opt_val = is_array( $opt_val ) ? array_map( array( $arpricemain, 'arprice_sanitize_values' ), $opt_val ) : $arpricemain->arprice_sanitize_single_value( $opt_val );
+
+			if( is_array( $opt_val ) ){
+				$opt_val = wp_json_encode( $opt_val );
+			}
+			
+			$arpricemain->arprice_update_settings( $option_name, $opt_val, 'general_settings' );
+		}
+	}
+}
+
+
+$arplite_newdb_version = sanitize_text_field( '3.6.5' );
 
 update_option( 'arpricelite_version', $arplite_newdb_version );
 

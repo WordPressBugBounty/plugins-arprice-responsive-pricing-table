@@ -1,4 +1,7 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) { exit; }
+
 function arprice_font_awesome_font_array() {
 	return array(
 		'font_awesome'    => array(
@@ -2539,7 +2542,7 @@ function arprice_font_awesome_font_array() {
 				'code'  => 'fa-trello',
 			),
 			'Tripadvisor'                         => array(
-				'style' => 'fab',
+				'style' => 'fa',
 				'code'  => 'fa-tripadvisor',
 			),
 			'Tumblr'                              => array(
@@ -5116,7 +5119,7 @@ function arprice_font_awesome_font_array() {
 				'code'  => 'fa-otter',
 			),
 			'Penny Arcade'                        => array(
-				'style' => 'fab',
+				'style' => 'fas',
 				'code'  => 'fa-penny-arcade',
 			),
 			'Person Booth'                        => array(
@@ -6035,6 +6038,1533 @@ function arprice_font_awesome_font_array() {
 				'style' => 'fab',
 				'code'  => 'fa-wodu',
 			),
+			'House'								  => array(
+				'style' => 'fas',
+				'code' => 'fa-house',	
+			),
+			'Mangnifying Glass'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-magnifying-glass',
+			),		  
+			'User'								  => array(
+				'style' => 'fas',
+				'code' => 'fa-user',
+			),
+			'Magic sparkles'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-wand-magic-sparkles',
+			),
+			'Arrow up from basket'				  => array(
+				'style' => 'fas',
+				'code' => 'fa-arrow-up-from-bracket',
+			),
+			'Chart simple'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-chart-simple',
+			),
+			'Code compare'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-code-compare',
+			),
+			'Truck front'                         => array(
+				'style' => 'fas',
+				'code' => 'fa-truck-front',
+			),
+			'Cable car'							  => array(
+				'style' => 'fas',
+				'code' => 'fa-cable-car',
+			),
+			'Mountain-sun' 						  => array(
+				'style' => 'fas',
+				'code' => 'fa-mountain-sun',
+			),
+			'Z'									  => array(
+				'style' => 'fas',
+				'code' => 'fa-z',
+			),
+			'Y'									  => array(
+				'style' => 'fas',
+				'code' => 'fa-y',
+			),
+			'Xmarks-lines'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-xmarks-lines',
+			),
+			'X'									  => array(
+				'style' => 'fas',
+				'code' => 'fa-x',
+			),
+			'Worm'								  => array(
+				'style' => 'fas',
+				'code' => 'fa-worm',
+			),
+			'Wheelchair-move'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-wheelchair-move',
+			),
+			'Wheat-awn-circle-exclamation'		  => array(
+				'style' => 'fas',
+				'code' => 'fa-wheat-awn-circle-exclamation',
+			),
+			'Wheat-awn'							  => array(
+				'style' => 'fas',
+				'code' => 'fa-wheat-awn',
+			),
+			'W'									  => array(
+				'style'=> 'fas',
+				'code' => 'fa-w',
+			),
+			'Virus-covid-slash'   				  => array(
+				'style' => 'fas',
+				'code' => 'fas fa-virus-covid-slash',
+			),
+			'Virus-covid'						  => array(
+				'style' => 'fas',
+				'code'  => 'fa-virus-covid',
+			),
+			'Vial-virus'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-vial-virus',
+			),
+			'Vial-circle-check' 				  => array(
+				'style' => 'fas',
+				'code' => 'fa-vial-circle-check',
+			),
+			'Vault'								  => array(
+				'style' => 'fas',
+				'code' => 'fa-vault',
+			),
+			'V'									  => array(
+				'style' => 'fas',
+				'code' => 'fa-v',
+ 			),
+			'Users-viewfinder'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-users-viewfinder',
+			),
+			'Users-rectangle'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-users-rectangle',
+			),
+			'Users-rays'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-users-rays',
+			),
+			'Users-line' 						  => array(
+				'style' => 'fas',
+				'code' => 'fa-users-line',
+			),
+			'Users-between-lines'				  => array(
+				'style' => 'fas',
+				'code' => 'fa-users-between-lines',
+			),
+			'U'									  => array(
+				'style' => 'fas',
+				'code' => 'fa-u',
+			),
+			'Turkish-lira-sign'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-turkish-lira-sign',
+			),
+			'Truck-plane' 						  => array(
+				'style' => 'fas',
+				'code' => 'fa-truck-plane',
+			),
+			'Truck-field-un'                      => array(
+				'style' => 'fas',
+				'code' => 'fa-truck-field-un',
+			),
+			'Truck-field' 						  => array(
+				'style' => 'fas',
+				'code' => 'fa-truck-field',
+			),
+			'Truck-droplet' 					  => array(
+				'style' => 'fas',
+				'code' => 'fa-truck-droplet',
+			),
+			'Truck-arrow-right'                   => array(
+				'style' => 'fas',
+				'code' => 'fa-truck-arrow-right',
+			),
+			'Trowel-bricks'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-trowel-bricks',
+			),
+			'Trowel'							  => array(
+				'style' => 'fas',
+				'code' => 'fa-trowel',
+			),
+			'Tree-city' 						  => array(
+				'style' => 'fas',
+				'code' => 'fa-tree-city',
+			),
+			'Tower-observation'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-tower-observation',
+			),
+			'Tower-cell'						  => array(
+				'style' => 'tower-cell',
+				'code' => 'fa-tower-cell',
+			),
+			'Toilets-portable'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-toilets-portable',
+			),
+			'Toilet-portable'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-toilet-portable',
+			),
+			'Timeline'							  => array(
+				'style' => 'fas',
+				'code' => 'fa-timeline',
+			),
+			'Tents'								  => array(
+				'style' => 'fas',
+				'code' => 'fa-tents',
+			),
+			'Tent-arrows-down'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-tent-arrows-down',
+			),
+			'Tent-arrow-turn-left'				  => array(
+				'style' => 'fas',
+				'code' => 'fa-tent-arrow-turn-left',
+			),
+			'Tent-arrow-left-right'				  => array(
+				'style' => 'fas',
+				'code' => 'fa-tent-arrow-left-right',
+			),
+			'Tent-arrow-down-to-line'			  => array(
+				'style' => 'fas',
+				'code' => 'fa-tent-arrow-down-to-line',
+			),
+			'Tent'								  => array(
+				'style' => 'fas',
+				'code' => 'fa-tent',
+			),
+			'Tarp-droplet'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-tarp-droplet',
+			),
+			'Tarp'								  => array(
+				'style' => 'fas',
+				'code' => 'fa-tarp',
+			),
+			'Table-cells-row-lock'				  => array(
+				'style' => 'fas',
+				'code' => 'fa-table-cells-row-lock',
+			),
+			'Table-cells-column-lock'			  => array(
+				'style' => 'fas',
+				'code' => 'fa-table-cells-column-lock',
+			),
+			'T'									  => array(
+				'style' => 'fas',
+				'code' => 'fa-t',
+			),
+			'Sun-plant-wilt'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-sun-plant-wilt',
+			),
+			'Stapler'							  => array(
+				'style' => 'fas',
+				'code' => 'fa-stapler',
+			),
+			'Stairs'							  => array(
+				'style' => 'fas',
+				'code' => 'fa-stairs',
+			),
+			'Staff-snake'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-staff-snake',
+			),
+			'Square-virus'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-square-virus',
+			),
+			'Square-person-confined'			  => array(
+				'style' => 'fas',
+				'code' => 'fa-square-person-confined',
+			),
+			'Square-nfi'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-square-nfi',
+			),
+			'Shrimp'							  => array(
+				'style' => 'fas',
+				'code' => 'fa-shrimp',
+			),
+			'Shop-lock'							  => array(
+				'style' => 'fas',
+				'code' => 'fa-shop-lock',
+			),
+			'Shield-heart'						  => array(
+				'style' => 'fas',
+				'code'=> 'fa-shield-heart',
+			),
+			'Shield-dog'					      => array(
+				'style' => 'fas',
+				'code' => 'fa-shield-dog',
+			),
+			'Shield-cat'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-shield-cat',
+			),
+			'Sheet-plastic'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-sheet-plastic',
+			),
+			'Section'							  => array(
+				'style' => 'fas',
+				'code' => 'fa-section',
+			),
+			'School-lock'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-school-lock',
+			),
+			'School-flag'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-school-flag',
+			),
+			'School-circle-xmark'				  => array(
+				'style' => 'fas',
+				'code'  => 'fa-school-circle-xmark',
+			),
+			'School-circle-exclamation'			  => array(
+				'style' => 'fas',
+				'code' => 'fa-school-circle-exclamation',
+			),
+			'School-circle-check'				  => array(
+				'style' => 'fas',
+				'code' => 'fa-school-circle-check',
+			),
+			'Sailboat'							  => array(
+				'style' => 'fas',
+				'code' => 'fa-sailboat',
+			),
+			'Sack-xmark'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-sack-xmark',
+			),
+			'S'									  => array(
+				'style' => 'fas',
+				'code' => 'fa-s',
+			),
+			'Rupiah-sign'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-rupiah-sign',
+			),
+			'Rug'								  => array(
+				'style' => 'fas',
+				'code' => 'fa-rug',
+			),
+			'Road-spikes'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-road-spikes',
+			),
+			'Road-lock'							  => array(
+				'style' => 'fas',
+				'code' => 'fa-road-lock',
+			),
+			'Road-circle-xmark'					  => array(
+
+				'style' => 'fas',
+				'code' => 'fa-road-circle-xmark',
+			),
+			'Road-circle-exclamation'			  => array(
+				'style' => 'fas',
+				'code' => 'fa-road-circle-exclamation',
+			),
+			'Road-circle-check'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-road-circle-check',
+			),
+			'Road-bridge'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-road-bridge',
+			),
+			'Road-barrier'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-road-barrier',
+			),
+			'Ranking-star'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-ranking-star',
+			),
+			'R'								      => array(
+				'style' => 'fas',
+				'code' => 'fa-r',
+			),
+			'Q'									  => array(
+				'style' => 'fas',
+				'code' => 'fa-q',
+			),
+			'Plus-minus'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-plus-minus',
+			),
+			'Plug-circle-xmark'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-plug-circle-xmark',
+			),
+			'Plug-circle-plus'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-plug-circle-plus',
+			),
+			'Plug-circle-minus'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-plug-circle-minus',
+			),
+			'Plug-circle-exclamation'			  => array(
+				'style' => 'fas',
+				'code' => 'fa-plug-circle-exclamation',
+			),
+			'Plug-circle-check'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-plug-circle-check',
+			),
+			'Plug-circle-bolt'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-plug-circle-bolt',
+			),
+			'Plate-wheat'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-plate-wheat',
+			),
+			'Plant-wilt'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-plant-wilt',
+			),
+			'Plane-up'							  => array(
+				'style' => 'fas',
+				'code' => 'fa-plane-up',
+			),
+			'Plane-lock'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-plane-lock',
+			),
+			'Plane-circle-xmark'				  => array(
+				'style' => 'fas',
+				'code' => 'fa-plane-circle-xmark',
+			),
+			'Plane-circle-exclamation'			  => array(
+				'style' => 'fas',
+				'code' => 'fa-plane-circle-exclamation',
+			),
+			'Plane-circle-check'				  => array(
+				'style' => 'fas',
+				'code' => 'fa-plane-circle-check',
+			),
+			'Peso-sign'							  => array(
+				'style' => 'fas',
+				'code' => 'fa-peso-sign',
+			),
+			'Peseta-sign'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-peseta-sign',
+			),
+			'Person-walking-luggage'			  => array(
+				'style' => 'fas',
+				'code' => 'fa-person-walking-luggage',
+			),
+			'Person-walking-dashed-line-arrow-right' => array(
+				'style' => 'fas',
+				'code' => 'fa-person-walking-dashed-line-arrow-right',
+			),
+			'Person-walking-arrow-right'		   => array(
+				'style' => 'fas',
+				'code' => 'fa-person-walking-arrow-right',
+			),
+			'Person-walking-arrow-loop-left'	   => array(
+				'style' => 'fas',
+				'code' => 'fa-person-walking-arrow-loop-left',
+			),
+			'Person-through-window'				   => array(
+				'style' => 'fas',
+				'code' => 'fa-person-through-window',
+			),
+			'Person-shelter'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-person-shelter',
+			),
+			'Person-rifle'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-person-rifle',
+			),
+			'Person-rays'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-person-rays',
+			),
+			'Person-pregnant'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-person-pregnant',
+			),
+			'Person-military-to-person'			  => array(
+				'style' => 'fas',
+				'code' => 'fa-person-military-to-person',
+			),
+			'Person-military-rifle'				  => array(
+				'style' => 'fas',
+				'code' => 'fa-person-military-rifle',
+			),
+			'Person-military-pointing'			  => array(
+				'style' => 'fas',
+				'code' => 'fa-person-military-pointing',
+			),
+			'Person-harassing'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-person-harassing',
+			),
+			'Person-half-dress'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-person-half-dress',
+			),
+			'Person-falling-burst'			      => array(
+				'style' => 'fas',
+				'code' => 'fa-person-falling-burst',
+			),
+			'Person-falling'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-person-falling',
+			),
+			'Person-drowning'					  => array(
+				'style' => 'fas',
+				'code'  => 'fa-person-drowning',
+			),
+			'Person-dress-burst'				  => array(
+				'style' => 'fas',
+				'code'  => 'fa-person-dress-burst',
+			),
+			'Person-circle-xmark'				  => array(
+				'style' => 'fas',
+				'code' => 'fa-person-circle-xmark',
+			),
+			'Person-circle-question'			  => array(
+				'style' => 'fas',
+				'code' => 'fa-person-circle-question',
+			),
+			'Person-circle-plus'				  => array(
+				'style' => 'fas',
+				'code' => 'fa-person-circle-plus',
+			),
+			'Person-circle-minus'				  => array(
+				'style' => 'fas',
+				'code' => 'fa-person-circle-minus',
+			),
+			'Person-circle-exclamation'			  => array(
+				'style' => 'fas',
+				'code' => 'fa-person-circle-exclamation',
+			),
+			'Person-circle-check'				  => array(
+				'style' => 'fas',
+				'code' => 'fa-person-circle-check',
+			),
+			'Person-chalkboard'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-person-chalkboard',
+			),
+			'Person-cane'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-person-cane',
+			),
+			'Person-burst'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-person-burst',
+			),
+			'Person-breastfeeding'				  => array(
+				'style' => 'fas',
+				'code' => 'fa-person-breastfeeding',
+			),
+			'Person-arrow-up-from-line'			  => array(
+				'style' => 'fas',
+				'code' => 'fa-person-arrow-up-from-line',
+			),
+			'Person-arrow-down-to-line'			  => array(
+				'style' => 'fas',
+				'code' => 'fa-person-arrow-down-to-line',
+			),
+			'People-roof'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-people-roof',
+			),
+			'People-robbery'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-people-robbery',
+			),
+			'People-pulling'				      => array(
+				'style' => 'fas',
+				'code' => 'fa-people-pulling',
+			),
+			'People-line'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-people-line',
+			),
+			'People-group'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-people-group',
+			),
+			'Panorama'							  => array(
+				'style' => 'fas',
+				'code' => 'fa-panorama',
+			),
+			'P'									  => array(
+				'style' => 'fas',
+				'code' => 'fa-p',
+			),
+			'Oil-well'							  => array(
+				'style' => 'fas',
+				'code' => 'fa-oil-well',
+			),
+			'O'									  => array(
+				'style' => 'fas',
+				'code' => 'fa-o',
+			),
+			'Notdef'							  => array(
+				'style' => 'fas',
+				'code' => 'fa-notdef',
+			),
+			'Naira-sign'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-naira-sign',
+			),
+			'N'								      => array(
+				'style' => 'fas',
+				'code' => 'fa-n',
+			),
+			'Mountain-city'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-mountain-city',
+			),
+			'Mound'								  => array(
+				'style' => 'fas',
+				'code' => 'fa-mound'
+			),
+			'Mosquito-net'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-mosquito-net',
+			),
+			'Mosquito'							  => array(
+				'style' => 'fas',
+				'code' => 'fa-mosquito',
+			),
+			'Money-bills'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-money-bills',
+			),
+			'Money-bill-wheat'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-money-bill-wheat',
+			),
+			'Money-bill-trend-up'				  => array(
+				'style' => 'fas',
+				'code' => 'fa-money-bill-trend-up',
+			),
+			'Money-bill-transfer'				  => array(
+				'style' => 'fas',
+				'code' => 'fa-money-bill-transfer',
+			),
+			'Mobile-retro'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-mobile-retro',
+			),
+			'Mill-sign'					          => array(
+				'style' => 'fas',
+				'code' => 'fa-mill-sign',
+			),
+			'Mattress-pillow'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-mattress-pillow',
+			),
+			'Mask-ventilator'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-mask-ventilator',
+			),
+			'Mask-face'							  => array(
+				'style' => 'fas',
+				'code' => 'fa-mask-face',
+			),
+			'Mars-and-venus-burst'				  => array(
+				'style' => 'fas',
+				'code' => 'fa-mars-and-venus-burst',
+			),
+			'Manat-sign'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-manat-sign',
+			),
+			'Magnifying-glass-chart'			  => array(
+				'style' => 'fas',
+				'code' => 'fa-magnifying-glass-chart',
+			),
+			'Magnifying-glass-arrow-right'		  => array(
+				'style' => 'fas',
+				'code' => 'fa-magnifying-glass-arrow-right',
+			),
+			'M'									  => array(
+				'style' => 'fas',
+				'code' => 'fa-m',
+			),
+			'Locust'							  => array(
+				'style' => 'fas',
+				'code' => 'fa-locust',
+			),
+			'Location-pin-lock'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-location-pin-lock',
+			),
+			'Litecoin-sign'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-litecoin-sign',
+			),
+			'Lines-leaning'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-lines-leaning',
+			),
+			'Lari-sign'							  => array(
+				'style' => 'fas',
+				'code' => 'fa-lari-sign',
+			),
+			'Laptop-file'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-laptop-file',
+			),
+			'Landmark-flag'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-landmark-flag',
+			),
+			'Land-mine-on'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-land-mine-on',
+			),
+			'L'									  => array(
+				'style' => 'fas',
+				'code' => 'fa-l',
+			),
+			'Kitchen-set'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-kitchen-set',
+			),
+			'Kip-sign'							  => array(
+				'style' => 'fas',
+				'code' => 'fa-kip-sign',
+			),
+			'K'									  => array(
+				'style' => 'fas',
+				'code' => 'fa-k',
+			),
+			'Jug-detergent'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-jug-detergent',
+			),
+			'Jet-fighter-up'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-jet-fighter-up',
+			),
+			'Jar-wheat'							  => array(
+				'style' => 'fas',
+				'code' => 'fa-jar-wheat',
+			),
+			'Jar'								  => array(
+				'style' => 'fas',
+				'code' => 'fa-jar',
+			),
+			'J'									  => array(
+				'style' => 'fas',
+				'code' => 'fa-j',
+			),
+			'Indian-rupee-sign'					  => array(
+				'style' => 'fas',
+				'code' => 'fa-indian-rupee-sign',
+			),
+			'I' 								  => array(
+				'style' => 'fas',
+				'code' => 'fa-i',
+			),
+			'House-tsunami'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-house-tsunami',
+			),
+			'House-medical-flag'				  => array(
+				'style' => 'fas',
+				'code' => 'fa-house-medical-flag',
+			),
+			'House-medical-circle-xmark'		  => array(
+				'style' => 'fas',
+				'code' => 'fa-house-medical-circle-xmark',
+			),
+			'House-medical-circle-exclamation'	  => array(
+				'style' => 'fas',
+				'code' => 'fa-house-medical-circle-exclamation',
+			),
+			'House-medical-circle-check'		  => array(
+				'style' => 'fas',
+				'code' => 'fa-house-medical-circle-check',
+			),
+			'House-medical'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-house-medical',
+			),
+			'House-lock'						  => array(
+				'style' => 'fas',
+				'code' => 'fa-house-lock',
+			),
+			'House-flood-water-circle-arrow-right'	=> array(
+				'style' => 'fas',
+				'code' => 'fa-house-flood-water-circle-arrow-right',
+			),
+			'House-flood-water'						=> array(
+				'style' => 'fas',
+				'code' => 'fa-house-flood-water',
+			),
+			'House-flag'							 => array(
+				'style' => 'fas',
+				'code' => 'fa-house-flag',
+			),
+			'House-fire'							 => array(
+				'style' => 'fas',
+				'code' => 'fa-house-fire',
+			),
+			'House-crack'							 => array(
+				'style' => 'fas',
+				'code' => 'fa-house-crack',
+			),
+			'House-circle-xmark'					 => array(
+				'style' => 'fas',
+				'code' => 'fa-house-circle-xmark',
+			),
+			'House-circle-exclamation'				 => array(
+				'style' => 'fas',
+				'code' => 'fa-house-circle-exclamation',
+			),
+			'House-circle-check'					 => array(
+				'style' => 'fas',
+				'code' => 'fa-house-circle-check',
+			),
+			'House-chimney'							 => array(
+				'style' => 'fas',
+				'code' => 'fa-house-chimney',
+			),
+			'Hill-rockslide'						 => array(
+				'style' => 'fas',
+				'code' => 'fa-hill-rockslide',
+			),
+			'Hill-avalanche'						 => array(
+				'style' => 'fas',
+				'code' => 'fa-hill-avalanche',
+			),
+			'Helmet-un'								 => array(
+				'style' => 'fas',
+				'code' => 'fa-helmet-un',		
+			),
+			'Helicopter-symbol'					     => array(
+				'style' => 'fas',
+				'code' => 'fa-helicopter-symbol',
+			),
+			'Heart-circle-xmark'					 => array(
+				'style' => 'fas',
+				'code' => 'fa-heart-circle-xmark',
+			),
+			'Heart-circle-plus'						 => array(
+				'style' => 'fas',
+				'code' => 'fa-heart-circle-plus',
+			),
+			'Heart-circle-minus'					 => array(
+				'style' => 'fas',
+				'code' => 'fa-heart-circle-minus',
+			),
+			'Heart-circle-exclamation'				 => array(
+				'style' => 'fas',
+				'code' => 'fa-heart-circle-exclamation',
+			),
+			'Heart-circle-check'					 => array(
+				'style' => 'fas',
+				'code' => 'fa-heart-circle-check',
+			),
+			'Heart-circle-bolt'					     => array(
+				'style' => 'fas',
+				'code' => 'fa-heart-circle-bolt',
+			),
+			'Hands-holding-circle' 					 => array(
+				'style' => 'fas',
+				'code' => 'fa-hands-holding-circle',
+			),
+			'Hands-holding-child'					 => array(
+				'style' => 'fas',
+				'code' => 'fa-hands-holding-child',
+			),
+			'Hands-clapping'						 => array(
+				'style' => 'fas',
+				'code' => 'fa-hands-clapping',
+			),
+			'Hands-bound'							 => array(
+				'style' => 'fas',
+				'code' => 'fa-hands-bound',
+			),
+			'Handcuffs'								 => array(
+				'style' => 'fas',
+				'code' => 'fa-handcuffs',
+			),
+			'Hand-holding-hand'						 => array(
+				'style' => 'fas',
+				'code' => 'fa-hand-holding-hand',
+			),
+			'H'										 => array(
+				'style' => 'fas',
+				'code' => 'fa-h',
+			),
+			'Gun'									 => array(
+				'style' => 'fas',
+				'code' => 'fa-gun',
+			),
+			'Guarani-sign'							 => array(
+				'style' => 'fas',
+				'code' => 'fa-guarani-sign',
+			),
+			'Group-arrows-rotate'					 => array(
+				'style' => 'fas',
+				'code' => 'fa-group-arrows-rotate',
+			),
+			'Glass-water-droplet'					 => array(
+				'style' => 'fas',
+				'code' => 'fa-glass-water-droplet',
+			),
+			'Glass-water'							 => array(
+				'style' => 'fas',
+				'code' => 'fa-glass-water',
+			),
+			'G'										 => array(
+				'style' => 'fas',
+				'code' => 'fa-g',
+			),
+			'Franc-sign'							 => array(
+				'style' => 'fas',
+				'code' => 'fa-franc-sign',
+			),
+			'Folder-closed'							 => array(
+				'style' => 'fas',
+				'code' => 'fa-folder-closed',
+			),
+			'Florin-sign'							 => array(
+				'style' => 'fas',
+				'code' => 'fa-florin-sign',
+			),
+			'Flask-vial'							 => array(
+				'style' => 'fas',
+				'code' => 'fa-flask-vial',
+			),
+			'Fish-fins'								 => array(
+				'style' => 'fas',
+				'code' => 'fa-fish-fins',
+			),
+			'Fire-burner'							 => array(
+				'style' => 'fas',
+				'code' => 'fa-fire-burner',
+			),
+			'Filter-circle-xmark'					 => array(
+				'style' => 'fas',
+				'code' => 'fa-filter-circle-xmark',
+			),
+			'File-shield'							 => array(
+				'style' => 'fas',
+				'code' => 'fa-file-shield',
+			),
+			'File-circle-xmark'						 => array(
+				'style' => 'fas',
+				'code' => 'fa-file-circle-xmark',
+			),
+			'File-circle-question'					 => array(
+				'style' => 'fas',
+				'code' => 'fa-file-circle-question',
+			),
+			'File-circle-plus'						 => array(
+				'style' => 'fas',
+				'code' => 'fa-file-circle-plus',
+			),
+			'File-circle-minus'						=> array(
+				'style' => 'fas',
+				'code' => 'fa-file-circle-minus',
+			),
+			'File-circle-exclamation'				=> array(
+				'style' => 'fas',
+				'code' => 'fa-file-circle-exclamation',
+			),
+			'File-circle-check'						=> array(
+				'style' => 'fas',
+				'code' => 'fa-file-circle-check',
+			),
+			'Ferry'									=> array(
+				'style' => 'fas',
+				'code' => 'fa-ferry',
+			),
+			'F'									    => array(
+				'style' => 'fas',
+				'code' => 'fa-f',
+			),
+			'Explosion'								=> array(
+				'style' => 'fas',
+				'code' => 'fa-explosion',
+			),
+			'Envelope-circle-check'					=> array(
+				'style' => 'fas',
+				'code' => 'fa-envelope-circle-check',
+			),
+			'Elevator'								=> array(
+				'style' => 'fas',
+				'code' => 'fa-elevator',
+			),
+			'Earth-oceania'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-earth-oceania',
+			),
+			'E'									    => array(
+				'style' => 'fas',
+				'code' => 'fa-e',
+			),
+			'Dong-sign'								=> array(
+				'style' => 'fas',
+				'code' => 'fa-dong-sign',
+			),
+			'Display'								=> array(
+				'style' => 'fas',
+				'code' => 'fa-display',
+			),
+			'Diagram-successor'						=> array(
+				'style' => 'fas',
+				'code' => 'fa-diagram-successor',
+			),
+			'Diagram-predecessor'					=> array(
+				'style' => 'fas',
+				'code' => 'fa-diagram-predecessor',
+			),
+			'Diagram-next'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-diagram-next',
+			),
+			'D'										=> array(
+				'style' => 'fas',
+				'code' => 'fa-d',
+			),
+			'Cubes-stacked'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-cubes-stacked',
+			),
+			'Cruzeiro-sign'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-cruzeiro-sign',
+			),
+			'Computer'								=> array(
+				'style' => 'fas',
+				'code' => 'fa-computer',
+			),
+			'Colon-sign'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-colon-sign',
+			),
+			'Code-pull-request'						=> array(
+				'style' => 'fas',
+				'code' => 'fa-code-pull-request',
+			),
+			'Code-fork'								=> array(
+				'style' => 'fas',
+				'code' => 'fa-code-fork',
+			),
+			'Clover'							    => array(
+				'style' => 'fas',
+				'code' => 'fa-clover',
+			),
+			'Cloud-showers-water'				    => array(
+				'style' => 'fas',
+				'code' => 'fa-cloud-showers-water',
+			),
+			'Clipboard-question' 					=> array(
+				'style' => 'fas',
+				'code' => 'fa-clipboard-question',
+			),
+			'Clapperboard'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-clapperboard',
+			),
+			'Circle-nodes'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-circle-nodes',	
+			),
+			'Children'								=> array(
+				'style' => 'fas',
+				'code' => 'fa-children',
+			),
+			'Child-reaching'						=> array(
+				'style' => 'fas',
+				'code' => 'fa-child-reaching',
+			),
+			'Child-dress'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-child-dress',
+			),
+			'Child-combatant'						=> array(
+				'style' => 'fas',
+				'code' => 'fa-child-combatant',
+			),
+			'Chart-gantt'						    => array(
+				'style' => 'fas',
+				'code' => 'fa-chart-gantt',
+			),
+			'Chart-column'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-chart-column',
+			),
+			'Cent-sign'								=> array(
+				'style' => 'fas',
+				'code' => 'fa-cent-sign',
+			),
+			'Cedi-sign'								=> array(
+				'style' => 'fas',
+				'code' => 'fa-cedi-sign',		
+			),
+			'Car-tunnel'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-car-tunnel',
+			),
+			'Car-on'							    => array(
+				'style' => 'fas',
+				'code' => 'fa-car-on',
+			),
+			'camera-rotate'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-camera-rotate',
+			),
+			'C'										=> array(
+				'style' => 'fas',
+				'code' => 'fa-c',
+			),
+			'Burst'									=> array(
+				'style' => 'fas',
+				'code' => 'fa-burst',
+			),
+			'Building-wheat'						=> array(
+				'style' => 'fas',
+				'code' => 'fa-building-wheat',
+			),
+			'Building-user'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-building-user',
+			),
+			'Building-un'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-building-un',
+			),
+			'Building-shield'						=> array(
+				'style' => 'fas',
+				'code' => 'fa-building-shield',
+			),
+			'Building-ngo'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-building-ngo',
+			),
+			'Building-lock'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-building-lock',
+			),
+			'Building-flag'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-building-flag',
+			),
+			'Building-circle-xmark'					=> array(
+				'style' => 'fas',
+				'code' => 'fa-building-circle-xmark',
+			),
+			'Building-circle-exclamation'			=> array(
+				'style' => 'fas',
+				'code' => 'fa-building-circle-exclamation',
+			),
+			'Building-circle-check'					=> array(
+				'style' => 'fas',
+				'code' => 'fa-building-circle-check',
+			),
+			'Building-circle-arrow-right'			=> array(
+				'style' => 'fas',
+				'code' => 'fa-building-circle-arrow-right',
+			),
+			'Bugs'									=> array(
+				'style' => 'fas',
+				'code' => 'fa-bugs',
+			),
+			'Bug-slash'								=> array(
+				'style' => 'fas',
+				'code' => 'fa-bug-slash',
+			),
+			'Bucket'								=> array(
+				'style' => 'fas',
+				'code' => 'fa-bucket',
+			),
+			'Bridge-water'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-bridge-water',
+			),
+			'Bridge-lock'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-bridge-lock',
+			),
+			'Bridge-circle-xmark'					=> array(
+				'style' => 'fas',
+				'code' => 'fa-bridge-circle-xmark',
+			),
+			'Bridge-circle-exclamation'				=> array(
+				'style' => 'fas',
+				'code' => 'fa-bridge-circle-exclamation',
+			),
+			'Bridge-circle-check'					=> array(
+				'style' => 'fas',
+				'code' => 'fa-bridge-circle-check',
+			),
+			'Bridge'								=> array(
+				'style' => 'fas',
+				'code' => 'fa-bridge',
+			),
+			'Brazilian-real-sign'					=> array(
+				'style' => 'fas',
+				'code' => 'fa-brazilian-real-sign',
+			),
+			'Boxes-packing'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-boxes-packing', 
+			),
+			'Bowl-rice'								=> array(
+				'style' => 'fas',
+				'code' => 'fa-bowl-rice',
+			),
+			'Bowl-food'								=> array(
+				'style' => 'fas',
+				'code' => 'fa-bowl-food',
+			),
+			'Bottle-water'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-bottle-water',
+			),
+			'Bottle-droplet'					    => array(
+				'style' => 'fas',
+				'code' => 'fa-bottle-droplet',
+			),
+			'Bore-hole'								=> array(
+				'style' => 'fas',
+				'code' => 'fa-bore-hole',
+			),
+			'Book-bookmark'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-book-bookmark',
+			),
+			'Bolt-lightning'						=> array(
+				'style' => 'fas',
+				'code' => 'fa-bolt-lightning',
+			),
+			'Bitcoin-sign'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-bitcoin-sign',
+			),
+			'Bangladeshi-taka-sign'					=> array(
+				'style' => 'fas',
+				'code' => 'fa-bangladeshi-taka-sign',
+			),
+			'Baht-sign'								=> array(
+				'style' => 'fas',
+				'code' => 'fa-baht-sign',
+			),
+			'B'										=> array(
+				'style' => 'fas',
+				'code' => 'fa-b',
+			),
+			'Austral-sign'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-austral-sign',
+			),
+			'Arrows-up-to-line'						=> array(
+				'style' => 'fas',
+				'code' => 'fa-arrows-up-to-line',
+			),
+			'Arrows-turn-to-dots'					=> array(
+				'style' => 'fas',
+				'code' => 'fa-arrows-turn-to-dots',
+			),
+			'Arrows-turn-right'						=> array(
+				'style' => 'fas',
+				'code' => 'fa-arrows-turn-right',
+			),
+			'Arrows-to-eye'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-arrows-to-eye',
+			),
+			'Arrows-to-dot'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-arrows-to-dot',
+			),
+			'Arrows-to-circle'						=> array(
+				'style' => 'fas',
+				'code' => 'fa-arrows-to-circle',
+			),
+			'Arrows-split-up-and-left'				=> array(
+				'style' => 'fas',
+				'code' => 'fa-arrows-split-up-and-left',
+			),
+			'Arrows-spin'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-arrows-spin',
+			),
+			'Arrows-left-right-to-line'				=> array(
+				'style' => 'fas',
+				'code' => 'fa-arrows-left-right-to-line',
+			),
+			'Arrows-down-to-people'					=> array(
+				'style' => 'fas',
+				'code' => 'fa-arrows-down-to-people',
+			),
+			'Arrows-down-to-line'					=> array(
+				'style' => 'fas',
+				'code' => 'fa-arrows-down-to-line',
+			),
+			'Arrow-up-right-dots'					=> array(
+				'style' => 'fas',
+				'code' => 'fa-arrow-up-right-dots',
+			),
+			'Arrow-up-from-water-pump'			   => array(
+				'style' => 'fas',
+				'code' => 'fa-arrow-up-from-water-pump',
+			),
+			'Arrow-up-from-ground-water'		   => array(
+				'style' => 'fas',
+				'code' => 'fa-arrow-up-from-ground-water',
+			),
+			'Arrow-trend-up'						=> array(
+				'style' => 'fas',
+				'code' => 'fa-arrow-trend-up',
+			),
+			'Arrow-trend-down'						=> array(
+				'style' => 'fas',
+				'code' => 'fa-arrow-trend-down',
+			),
+			'Arrow-right-to-city'					=> array(
+				'style' => 'fas',
+				'code' => 'fa-arrow-right-to-city',
+			),
+			'Arrow-down-up-lock'					=> array(
+				'style' => 'fas',
+				'code' => 'fa-arrow-down-up-lock',
+			),
+			'Arrow-down-up-across-line'				=> array(
+				'style' => 'fas',
+				'code' => 'fa-arrow-down-up-across-line',
+			),
+			'Anchor-lock'							=> array(
+				'style' => 'fas',
+				'code' => 'fa-anchor-lock',
+			),
+			'Anchor-circle-xmark'					=> array(
+				'style' => 'fas',
+				'code' => 'fa-anchor-circle-xmark',
+			),
+			'Anchor-circle-exclamation'				=> array(
+				'style' => 'fas',
+				'code' => 'fa-anchor-circle-exclamation',
+			),
+			'Anchor-circle-check'					=>array(
+				'style' => 'fas',
+				'code' => 'fa-anchor-circle-check',
+			),
+			'A'										=> array(
+				'style' => 'fas',
+				'code' => 'fa-a',
+			),
+			'9'										=> array(
+				'style' => 'fas',
+				'code' => 'fa-9',
+			),
+			'8'										=> array(
+				'style' => 'fas',
+				'code' => 'fa-8',
+			),
+			'7'										=> array(
+				'style'=> 'fas',
+				'code' =>'fa-7',
+			),
+			'6'										=> array(
+				'style' => 'fas',
+				'code' => 'fa-6',
+			),
+			'5'										=> array(
+				'style' => 'fas',
+				'code' => 'fa-5',
+			),
+			'4'										=> array(
+				'style' => 'fas',
+				'code' => 'fa-4',
+			),
+			'3'										=> array(
+				'style' => 'fas',
+				'code' => 'fa-3',
+			),
+			'2'										=> array(
+				'style' => 'fas',
+				'code' => 'fa-2',
+			),
+			'1'										=> array(
+				'style' => 'fas',
+				'code' => 'fa-1',
+			),
+			'0'										=> array(
+				'style' => 'fas',
+				'code' => 'fa-0',
+			),
+			'X-twitter'								=> array(
+				'style' => 'fab',
+				'code' => 'fa-x-twitter',
+			)							,
+			'Wirsindhandwerk'						=> array(
+				'style' => 'fab',
+				'code' => 'fa-wirsindhandwerk',
+			),
+			'Webflow'								=> array(
+				'style' => 'fab',
+				'code' => 'fa-webflow',
+			),
+			'Upwork'								=> array(
+				'style' => 'fab',
+				'code' => 'fa-upwork',
+			),
+			'Threads'								=> array(
+				'style' => 'fab',
+				'code' => 'fa-threads',
+			),
+			'Stubber'								=> array(
+				'style' => 'fab',
+				'code' => 'fa-stubber',
+			),
+			'Square-x-twitter'						=> array(
+				'style' => 'fab',
+				'code' => 'fa-square-x-twitter',
+			),
+			'Square-web-awesome-stroke'				=> array(
+				'style' => 'fab',
+				'code' => 'fa-square-web-awesome-stroke',
+			),
+			'Square-web-awesome'					=> array(
+				'style' => 'fab',
+				'code' => 'fa-square-web-awesome',
+			),
+			'Square-upwork'							=> array(
+				'style' =>'fab',
+				'code' => 'fa-square-upwork',
+			),
+			'Square-threads'						=> array(
+				'style' => 'fab',
+				'code' => 'fa-square-threads',
+			),
+			'Square-letterboxd'						=> array(
+				'style' => 'fab',
+				'code' => 'fa-square-letterboxd',
+			),
+			'Square-gitlab'							=> array(
+				'style' => 'fab',
+				'code' => 'fa-square-gitlab',
+			),
+			'Space-awesome'							=> array(
+				'style' => 'fab',
+				'code' => 'fa-space-awesome',
+			),
+			'Sitrox'								=> array(
+				'style' => 'fab',
+				'code' => 'fa-sitrox',
+			),
+			'Signal-messenger'						=> array(
+				'style' => 'fab',
+				'code' => 'fa-signal-messenger',
+			),
+			'Shoelace'								=> array(
+				'style' => 'fab',
+				'code' => 'fa-shoelace',
+			),
+			'Screenpal'								=> array(
+				'style' => 'fab',
+				'code' => 'fa-screenpal',
+			),
+			'Pixiv'									=> array(
+				'style' => 'fab',
+				'code' => 'fa-pixiv',
+			),
+			'Pix'									=> array(
+				'style' => 'fab',
+				'code' => 'fa-pix',
+			),
+			'Padlet'								=> array(
+				'style' => 'fab',
+				'code' => 'fa-padlet',
+			),
+			'Opensuse'								=> array(
+				'style' => 'fab',
+				'code' => 'fa-opensuse',
+			),
+			'Odysee'								=> array(
+				'style' => 'fab',
+				'code' => 'fa-odysee',
+			),
+			'Nfc-directional'						=> array(
+				'style' => 'fab',
+				'code' => 'fa-nfc-directional',
+			),
+			'Mintbit'								=> array(
+				'style' => 'fab',
+				'code' => 'fa-mintbit',
+			),
+			'Meta'									=> array(
+				'style' => 'fab',
+				'code' => 'fa-meta',
+			),
+			'Letterboxd'							=> array(
+				'style' => 'fab',
+				'code' => 'fa-letterboxd',
+			),
+			'Jxl'									=> array(
+				'style' => 'fab',
+				'code' => 'fa-jxl',
+			),
+			'Hashnode'								=> array(
+				'style' => 'fab',
+				'code' => 'fa-hashnode',
+			),
+			'Google-scholar'						=> array(
+				'style' => 'fab',
+				'code' => 'fa-google-scholar',
+			),
+			'Golang'								=> array(
+				'style' => 'fab',
+				'code' => 'fa-golang',
+			),
+			'Debian'								=> array(
+				'style' => 'fab',
+				'code' => 'fa-debian',
+			),
+			'Cmplid'								=> array(
+				'style' => 'fab',
+				'code' => 'fa-cmplid',
+			),
+			'Brave-reverse'							=> array(
+				'style' => 'fab',
+				'code' => 'fa-brave-reverse',
+			),
+			'Brave'									=> array(
+				'style' => 'fab',
+				'code' => 'fa-brave',
+			),
+			'Bots'									=> array(
+				'style' => 'fab',
+				'code' => 'fa-bots',
+			),
+			'Bluesky'								=> array(
+				'style' => 'fab',
+				'code' => 'fa-bluesky',
+			),
+			'Bilibili'								=> array(
+				'style' => 'fab',
+				'code' => 'fa-bilibili',
+			),
+			
+
 		),
 		'material_design' => array(),
 		'typicons'        => array(),
